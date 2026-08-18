@@ -114,6 +114,34 @@ const services = [
   ["03", "Uçtan uca süreç", "İlan sunumundan tapu gününe kadar her adımı güvenle yönetiriz."],
 ];
 
+type Language = "TR" | "EN" | "DE" | "AR";
+
+const translations: Record<Language, {
+  featured: string;
+  intro: string;
+  listings: string;
+  membership: string;
+  contact: string;
+  start: string;
+  portfolio: string;
+  explore: string;
+  salesValue: string;
+  verified: string;
+  filmEyebrow: string;
+  filmTitle: string;
+  filmBody: string;
+  filmNote: string;
+  subtitles: string;
+  signLanguage: string;
+  signDemo: string;
+  signDemoBody: string;
+}> = {
+  TR: { featured: "Önerilen", intro: "MIRA’yı Tanı", listings: "Tüm İlanlar", membership: "Üyelik", contact: "İletişim", start: "Ücretsiz başla", portfolio: "Önerilen portföy", explore: "İlanı incele", salesValue: "Satış değeri", verified: "MIRA doğrulanmış portföy", filmEyebrow: "02 / MIRA TANITIM FİLMİ", filmTitle: "Bir emlak sitesi değil. Yeni nesil gayrimenkul ağı.", filmBody: "Portföyü, teknolojiyi ve insan dokunuşunu tek bir seçkin deneyimde buluşturuyoruz.", filmNote: "Sinematik tanıtım · 00:11", subtitles: "Altyazı", signLanguage: "İşaret dili", signDemo: "İşaret dili penceresi / Demo", signDemoBody: "Profesyonel tercüman videosu bu alanda eşzamanlı oynatılacaktır." },
+  EN: { featured: "Featured", intro: "Discover MIRA", listings: "All Listings", membership: "Membership", contact: "Contact", start: "Start free", portfolio: "Featured portfolio", explore: "View property", salesValue: "Sale value", verified: "MIRA verified portfolio", filmEyebrow: "02 / THE MIRA FILM", filmTitle: "Not just a property site. A new-generation real estate network.", filmBody: "We bring portfolio, technology and human insight together in one refined experience.", filmNote: "Cinematic introduction · 00:11", subtitles: "Captions", signLanguage: "Sign language", signDemo: "Sign-language window / Demo", signDemoBody: "A professional interpreter video will play synchronously in this area." },
+  DE: { featured: "Empfohlen", intro: "MIRA entdecken", listings: "Alle Immobilien", membership: "Mitgliedschaft", contact: "Kontakt", start: "Kostenlos starten", portfolio: "Empfohlenes Portfolio", explore: "Immobilie ansehen", salesValue: "Verkaufswert", verified: "Von MIRA geprüft", filmEyebrow: "02 / DER MIRA FILM", filmTitle: "Mehr als ein Immobilienportal. Ein Netzwerk der neuen Generation.", filmBody: "Wir verbinden Portfolio, Technologie und persönliche Beratung zu einem besonderen Erlebnis.", filmNote: "Cinematische Einführung · 00:11", subtitles: "Untertitel", signLanguage: "Gebärdensprache", signDemo: "Gebärdensprachfenster / Demo", signDemoBody: "Hier wird synchron das Video einer professionellen Dolmetscherin abgespielt." },
+  AR: { featured: "مختاراتنا", intro: "اكتشف MIRA", listings: "كل العقارات", membership: "العضوية", contact: "تواصل", start: "ابدأ مجاناً", portfolio: "العقارات المقترحة", explore: "عرض العقار", salesValue: "قيمة البيع", verified: "عقار موثّق من MIRA", filmEyebrow: "02 / فيلم MIRA", filmTitle: "ليست مجرد منصة عقارية، بل شبكة عقارات من الجيل الجديد.", filmBody: "نجمع العقارات والتقنية والخبرة الإنسانية في تجربة راقية واحدة.", filmNote: "فيلم تعريفي · 00:11", subtitles: "الترجمة", signLanguage: "لغة الإشارة", signDemo: "نافذة لغة الإشارة / نموذج", signDemoBody: "سيُعرض فيديو مترجم محترف بلغة الإشارة هنا بشكل متزامن." },
+};
+
 export default function Home() {
   const [intent, setIntent] = useState<"Satılık" | "Kiralık">("Satılık");
   const [city, setCity] = useState("Tümü");
@@ -122,6 +150,14 @@ export default function Home() {
   const [selected, setSelected] = useState<Listing | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [contactSent, setContactSent] = useState(false);
+  const [heroIndex, setHeroIndex] = useState(0);
+  const [language, setLanguage] = useState<Language>("TR");
+  const [signLanguage, setSignLanguage] = useState(false);
+
+  const heroListings = listings.filter((item) => item.featured);
+  const heroListing = heroListings[heroIndex];
+  const copy = translations[language];
+  const assetBase = typeof window !== "undefined" && window.location.pathname.startsWith("/mira-emlak") ? "/mira-emlak" : "";
 
   const filteredListings = useMemo(
     () => listings.filter((item) =>
@@ -154,45 +190,43 @@ export default function Home() {
   }
 
   return (
-    <main>
-      <header className="site-header site-header-v3">
+    <main className="site-shell" dir={language === "AR" ? "rtl" : "ltr"}>
+      <header className="site-header site-header-v4">
         <a className="brand" href="#anasayfa" aria-label="Mira Emlak ana sayfa">
-          <span className="brand-mark">M</span>
-          <span>MIRA<small>Gayrimenkul / İstanbul</small></span>
+          <span className="brand-mark"><i>M</i><b>/</b></span>
+          <span>MIRA<small>Real Estate Network</small></span>
         </a>
         <nav className={menuOpen ? "open" : ""} aria-label="Ana menü">
-          <a href="#ilanlar" onClick={() => setMenuOpen(false)}>İlanlar</a>
-          <a href="#hizmetler" onClick={() => setMenuOpen(false)}>Hizmetlerimiz</a>
-          <a href="#hakkimizda" onClick={() => setMenuOpen(false)}>Hakkımızda</a>
-          <a href="#iletisim" onClick={() => setMenuOpen(false)}>İletişim</a>
+          <a href="#anasayfa" onClick={() => setMenuOpen(false)}>{copy.featured}</a>
+          <a href="#tanitim" onClick={() => setMenuOpen(false)}>{copy.intro}</a>
+          <a href="#ilanlar" onClick={() => setMenuOpen(false)}>{copy.listings}</a>
+          <a href="#uyelik" onClick={() => setMenuOpen(false)}>{copy.membership}</a>
+          <a href="#iletisim" onClick={() => setMenuOpen(false)}>{copy.contact}</a>
         </nav>
         <div className="header-actions">
-          <a className="header-cta" href="#iletisim">Portföy talebi ↗</a>
+          <label className="language-switcher"><span className="sr-only">Dil seçin</span><select value={language} onChange={(event) => setLanguage(event.target.value as Language)} aria-label="Dil seçin"><option>TR</option><option>EN</option><option>DE</option><option>AR</option></select></label>
+          <a className="header-cta" href="#uyelik">{copy.start} <span>↗</span></a>
           <button className="menu-button" type="button" aria-label="Menüyü aç veya kapat" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? "×" : "☰"}</button>
         </div>
       </header>
 
-      <section className="hero-v3" id="anasayfa">
-        <div className="hero-v3-kicker"><span>Seçilmiş yaşam alanları</span><span>41.0422° N / 29.0083° E</span></div>
-        <div className="hero-v3-word" aria-hidden="true">MIRA</div>
-
-        <div className="hero-v3-copy">
-          <span className="hero-index">M / COLLECTION 01</span>
-          <h1><span>Adres değil.</span><em>Karakter</em><strong>seçin.</strong></h1>
-          <p>Standart ilanların dışına çıkın. İstanbul’un ritmine, yatırım hedefinize ve yaşamınıza göre seçilmiş sıra dışı adresler.</p>
-          <a href="#ilanlar">Koleksiyona gir <span>↓</span></a>
+      <section className="showcase" id="anasayfa">
+        <div className="showcase-backdrop" key={heroListing.id}><img src={heroListing.image} alt="" /><span /></div>
+        <div className="showcase-grid" aria-hidden="true" />
+        <div className="showcase-copy">
+          <span className="showcase-label"><i /> {copy.portfolio} / 0{heroIndex + 1}</span>
+          <p>{heroListing.district} · {heroListing.city}</p>
+          <h1>{heroListing.title}</h1>
+          <div className="showcase-facts"><span>{heroListing.rooms}<small>Oda</small></span><span>{heroListing.area}<small>Brüt alan</small></span><span>{heroListing.floor}<small>Konum</small></span></div>
+          <div className="showcase-actions"><button type="button" onClick={() => setSelected(heroListing)}>{copy.explore} <span>↗</span></button><a href="#ilanlar">{copy.listings}</a></div>
         </div>
-
-        <div className="hero-v3-image">
-          <img src={listings[0].image} alt="Boğaz hattında seçilmiş modern yaşam alanı" />
-          <button type="button" onClick={() => setSelected(listings[0])} aria-label="Öne çıkan portföyü incele">
-            <span>01 / FEATURED</span><strong>Beşiktaş</strong><small>18.750.000 TL ↗</small>
-          </button>
+        <div className="showcase-price"><span>{copy.salesValue}</span><strong>{heroListing.price}</strong><small>{copy.verified}</small></div>
+        <div className="showcase-nav" aria-label="Önerilen ilanlar">
+          {heroListings.map((home, index) => <button type="button" className={heroIndex === index ? "active" : ""} key={home.id} onClick={() => setHeroIndex(index)} aria-label={`${home.title} ilanını göster`}><img src={home.image} alt="" /><span>0{index + 1}</span><strong>{home.district}</strong></button>)}
         </div>
+        <div className="showcase-counter"><strong>0{heroIndex + 1}</strong><span>/ 0{heroListings.length}</span></div>
 
-        <aside className="hero-v3-note"><span>NOT ANOTHER<br />REAL ESTATE<br />AGENCY.</span><b>✳</b></aside>
-
-        <form className="property-search property-search-v3" onSubmit={submitSearch}>
+        <form className="property-search property-search-v4" onSubmit={submitSearch}>
           <div className="search-tabs" role="group" aria-label="İlan türü">
             {(["Satılık", "Kiralık"] as const).map((item) => (
               <button className={intent === item ? "active" : ""} type="button" key={item} onClick={() => setIntent(item)}>{item}</button>
@@ -210,16 +244,48 @@ export default function Home() {
               <option>Tümü</option><option>Konut</option><option>Villa</option><option>Arsa</option><option>İş yeri</option>
             </select>
           </label>
-          <button className="search-button" type="submit">{filteredListings.length} seçkiyi göster <span>↗</span></button>
+          <button className="search-button" type="submit">{filteredListings.length} ilanı keşfet <span>↗</span></button>
         </form>
       </section>
 
       <div className="editorial-ticker" aria-hidden="true">
-        <div><span>NOT ANOTHER REAL ESTATE AGENCY</span><b>✳</b><span>SEÇİLMİŞ MEKÂNLAR</span><b>✳</b><span>İSTANBUL / İZMİR / ANKARA</span><b>✳</b><span>NOT ANOTHER REAL ESTATE AGENCY</span><b>✳</b></div>
+        <div><span>DOĞRULANMIŞ PORTFÖY</span><b>✳</b><span>AKILLI EŞLEŞME</span><b>✳</b><span>ÇOK DİLLİ DENEYİM</span><b>✳</b><span>İLK YIL ÜCRETSİZ</span><b>✳</b></div>
       </div>
 
+      <section className="cinematic" id="tanitim">
+        <div className="cinematic-heading">
+          <span>{copy.filmEyebrow}</span>
+          <h2>{copy.filmTitle}</h2>
+          <p>{copy.filmBody}</p>
+        </div>
+        <div className="cinematic-stage">
+          <video controls playsInline preload="metadata" poster={listings[0].image} aria-label="MIRA sinematik tanıtım filmi">
+            <source src={`${assetBase}/mira-cinematic.mp4`} type="video/mp4" />
+            <track kind="captions" src={`${assetBase}/subtitles/mira-tr.vtt`} srcLang="tr" label="Türkçe" default />
+            <track kind="captions" src={`${assetBase}/subtitles/mira-en.vtt`} srcLang="en" label="English" />
+            <track kind="captions" src={`${assetBase}/subtitles/mira-de.vtt`} srcLang="de" label="Deutsch" />
+            <track kind="captions" src={`${assetBase}/subtitles/mira-ar.vtt`} srcLang="ar" label="العربية" />
+          </video>
+          <div className="cinematic-watermark" aria-hidden="true">MIRA / 01</div>
+          {signLanguage && (
+            <aside className="sign-language-frame" aria-label={copy.signDemo}>
+              <div className="sign-language-avatar" aria-hidden="true"><span /><i /></div>
+              <strong>{copy.signDemo}</strong>
+              <p>{copy.signDemoBody}</p>
+            </aside>
+          )}
+        </div>
+        <div className="accessibility-bar">
+          <span>{copy.filmNote}</span>
+          <div>
+            <label>{copy.subtitles}<select value={language} onChange={(event) => setLanguage(event.target.value as Language)} aria-label={copy.subtitles}><option>TR</option><option>EN</option><option>DE</option><option>AR</option></select></label>
+            <button type="button" className={signLanguage ? "active" : ""} aria-pressed={signLanguage} onClick={() => setSignLanguage((current) => !current)}>{copy.signLanguage} <span>{signLanguage ? "ON" : "OFF"}</span></button>
+          </div>
+        </div>
+      </section>
+
       <section className="category-strip" aria-label="Gayrimenkul kategorileri">
-        <div className="category-intro"><span>01 / Seçim alanı</span><h2>Nasıl bir hayat<br /><em>arıyorsunuz?</em></h2><p>Metrekareden önce hissi seçin. Portföyü yaşam biçiminize göre daraltın.</p></div>
+        <div className="category-intro"><span>03 / Seçim alanı</span><h2>Aradığınız mülkü<br /><em>tek bakışta bulun.</em></h2><p>Konut, villa, arsa veya iş yeri. Doğrulanmış portföyü ihtiyacınıza göre daraltın.</p></div>
         <div>
           {["Konut", "Villa", "Arsa", "İş yeri"].map((item, index) => (
             <button key={item} type="button" onClick={() => { setKind(item); document.getElementById("ilanlar")?.scrollIntoView({ behavior: "smooth" }); }}>
@@ -231,7 +297,7 @@ export default function Home() {
 
       <section className="featured" id="ilanlar">
         <div className="section-heading">
-          <div><span className="eyebrow">02 / MIRA COLLECTION</span><h2>İlan değil.<br /><em>Editoryal seçki.</em></h2></div>
+          <div><span className="eyebrow">04 / MIRA COLLECTION</span><h2>Sizin için<br /><em>öne çıkanlar.</em></h2></div>
           <p>{String(filteredListings.length).padStart(2, "0")} mekân yayında</p>
         </div>
         <div className="listing-filter" aria-label="Hızlı ilan filtresi">
@@ -268,15 +334,15 @@ export default function Home() {
       </section>
 
       <section className="value-band">
-        <span className="value-number">03</span>
+        <span className="value-number">05</span>
         <p>Satmak / kiralamak / yeniden konumlandırmak</p>
-        <h2>Sahibinden değil.<br /><em>Sizin için.</em></h2>
+        <h2>Mülkünüzü<br /><em>markaya dönüştürün.</em></h2>
         <div><p>Her mülkün anlatılacak bir karakteri vardır. Biz onu sıradan ilan kalabalığından çıkarır, doğru alıcının karşısına bir marka gibi koyarız.</p><a href="#iletisim">Mülkünüzü MIRA’ya alın <span>↗</span></a></div>
       </section>
 
       <section className="services" id="hizmetler">
         <div className="services-intro">
-          <span className="eyebrow">04 / ÇALIŞMA BİÇİMİ</span>
+          <span className="eyebrow">06 / ÇALIŞMA BİÇİMİ</span>
           <h2>Az konuşur,<br /><em>iyi seçeriz.</em></h2>
           <p>Bir algoritma gibi hızlı, iyi bir editör gibi seçiciyiz. Gürültüyü eler, kararı kolaylaştırırız.</p>
         </div>
@@ -293,7 +359,7 @@ export default function Home() {
           <div><strong>%98</strong><span>Tavsiye edilme oranı</span></div>
         </div>
         <div className="about-copy">
-          <span className="eyebrow">05 / MIRA MANİFESTO</span>
+          <span className="eyebrow">07 / MIRA MANİFESTO</span>
           <h2>Bir evin değeri,<br /><em>ilan fiyatından büyüktür.</em></h2>
           <p>Semtin sabah sesini, pencereden düşen ışığı, doğru yatırımın sessiz güvenini de hesaba katarız. Çünkü gayrimenkul, rakamlardan önce bir yaşam kararıdır.</p>
           <blockquote>“Doğru adres, insanın kendine verdiği en büyük sözlerden biridir.”</blockquote>
@@ -301,8 +367,30 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="membership" id="uyelik">
+        <div className="membership-intro">
+          <span>08 / MIRA NETWORK</span>
+          <p>Demo üyelik modeli</p>
+          <h2>İlk yıl<br /><em>bizden.</em></h2>
+          <div><strong>12</strong><span>AY<br />ÜCRETSİZ</span></div>
+        </div>
+        <div className="membership-content">
+          <p className="membership-lead">Müşteri, danışman ve kurumsal ekipleri tek ağda buluşturan üyelik kanalları. İlk 12 ay ücretsiz kullanım vizyonuyla tasarlandı.</p>
+          <div className="membership-plans">
+            {[
+              ["Bireysel", "Favoriler, akıllı arama ve yeni ilanlara erken erişim", "01"],
+              ["Profesyonel", "Portföy vitrini, talep takibi ve danışman profili", "02"],
+              ["Kurumsal", "Ekip yönetimi, çoklu kullanıcı ve performans raporları", "03"],
+            ].map(([title, description, number]) => (
+              <article key={title}><span>{number}</span><h3>{title}</h3><p>{description}</p><div><strong>₺0</strong><small>/ ilk 12 ay</small></div><a href="#iletisim">Ön kayıt <b>↗</b></a></article>
+            ))}
+          </div>
+          <small className="membership-note">Bu alan demo amaçlıdır. Üyelik altyapısı ve ödeme sistemi üretim aşamasında devreye alınacaktır.</small>
+        </div>
+      </section>
+
       <section className="testimonials">
-        <div className="section-heading"><div><span className="eyebrow">06 / GERÇEK SESLER</span><h2>İyi kararların<br /><em>ardından.</em></h2></div><span className="testimonial-index">MIRA / NOTES</span></div>
+        <div className="section-heading"><div><span className="eyebrow">09 / GERÇEK SESLER</span><h2>İyi kararların<br /><em>ardından.</em></h2></div><span className="testimonial-index">MIRA / NOTES</span></div>
         <div className="testimonial-grid">
           <article><div className="stars">★★★★★</div><p>“Üç haftada doğru alıcıyla buluştuk. Fiyatlama ve süreç yönetimi baştan sona çok netti.”</p><footer><strong>Selin A.</strong><span>Ev sahibi · İstanbul</span></footer></article>
           <article><div className="stars">★★★★★</div><p>“Şehir dışından ev ararken tüm detayları bizim için kontrol ettiler. Güven duygusu paha biçilemezdi.”</p><footer><strong>Mert &amp; Derya K.</strong><span>Alıcı · İzmir</span></footer></article>
@@ -312,7 +400,7 @@ export default function Home() {
 
       <section className="contact" id="iletisim">
         <div className="contact-copy">
-          <span className="eyebrow">07 / BAŞLANGIÇ</span>
+          <span className="eyebrow">10 / BAŞLANGIÇ</span>
           <h2>Bir sonraki<br /><em>adresiniz?</em></h2>
           <p>Kısa bir not bırakın. Size daha fazla ilan değil, daha net bir yönle dönelim.</p>
           <div className="contact-lines"><a href="tel:+905550000000">+90 555 000 00 00</a><a href="mailto:danisman@miraemlak.com">danisman@miraemlak.com</a></div>
@@ -327,7 +415,7 @@ export default function Home() {
       </section>
 
       <footer className="site-footer">
-        <div className="footer-top"><a className="brand footer-brand" href="#anasayfa"><span className="brand-mark">M</span><span>MIRA</span></a><p>NOT ANOTHER<br />REAL ESTATE AGENCY.</p></div>
+        <div className="footer-top"><a className="brand footer-brand" href="#anasayfa"><span className="brand-mark">M</span><span>MIRA</span></a><p>GELECEĞİN<br />GAYRİMENKUL AĞI.</p></div>
         <div className="footer-bottom"><span>© 2026 Mira Emlak. Tüm hakları saklıdır.</span><div><a href="#ilanlar">İlanlar</a><a href="#hizmetler">Hizmetler</a><a href="#iletisim">İletişim</a></div></div>
       </footer>
 

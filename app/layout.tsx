@@ -7,9 +7,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const host = requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host");
   const protocol = requestHeaders.get("x-forwarded-proto") ?? (host?.startsWith("localhost") ? "http" : "https");
   const baseUrl = host ? `${protocol}://${host}` : "https://mira-emlak.pages.dev";
-  const socialImage = `${baseUrl}/og-v3.png`;
-  const title = "MIRA | Adres Değil, Karakter";
-  const description = "Standart ilanların dışında, yaşamınıza ve yatırım hedefinize göre seçilmiş karakterli mekânlar.";
+  const socialImage = `${baseUrl}/og-v4.png`;
+  const title = "MIRA | Geleceğin Gayrimenkul Ağı";
+  const description = "Önerilen portföyler, sinematik çok dilli deneyim ve yeni nesil üyelik kanallarıyla gayrimenkulün geleceği.";
 
   return {
     title,
@@ -20,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
       locale: "tr_TR",
       siteName: "Mira Emlak",
-      images: [{ url: socialImage, width: 1734, height: 907, alt: "MIRA — Adres değil, karakter seçin" }],
+      images: [{ url: socialImage, width: 1731, height: 909, alt: "MIRA — Geleceğin gayrimenkul ağı" }],
     },
     twitter: {
       card: "summary_large_image",

@@ -20,12 +20,13 @@ test("Mira Emlak ana sayfasını sunucu tarafında oluşturur", async () => {
 
   const html = await response.text();
   assert.match(html, /<html[^>]*lang="tr"/i);
-  assert.match(html, /<title>MIRA \| Adres Değil, Karakter<\/title>/i);
-  assert.match(html, /Adres değil\./);
-  assert.match(html, /Editoryal seçki\./);
+  assert.match(html, /<title>MIRA \| Geleceğin Gayrimenkul Ağı<\/title>/i);
+  assert.match(html, /Önerilen portföy/);
+  assert.match(html, /Yeni nesil gayrimenkul ağı/);
   assert.match(html, /Boğaz manzaralı, teraslı daire/);
-  assert.match(html, /Portföy talebi/);
-  assert.match(html, /https:\/\/mira-emlak\.pages\.dev\/og-v3\.png/);
+  assert.match(html, /İlk yıl/);
+  assert.match(html, /mira-cinematic\.mp4/);
+  assert.match(html, /https:\/\/mira-emlak\.pages\.dev\/og-v4\.png/);
   assert.doesNotMatch(html, /codex-preview|SkeletonPreview|Your site is taking shape/i);
 });
 
@@ -35,6 +36,8 @@ test("temel erişilebilirlik ve iletişim öğelerini içerir", async () => {
 
   assert.match(html, /aria-label="Ana menü"/);
   assert.match(html, /aria-label="İlan türü"/);
+  assert.match(html, /mira-tr\.vtt/);
+  assert.match(html, /İşaret dili/);
   assert.match(html, /type="tel"/);
   assert.match(html, /mailto:danisman@miraemlak\.com/);
 });
