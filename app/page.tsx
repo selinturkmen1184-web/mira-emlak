@@ -173,12 +173,25 @@ export default function Home() {
       </header>
 
       <section className="hero" id="anasayfa">
-        <div className="hero-orb hero-orb-one" />
-        <div className="hero-orb hero-orb-two" />
         <div className="hero-copy">
-          <span className="eyebrow">Doğru ev, doğru karar.</span>
-          <h1>Hayalinizdeki evi<br /><em>birlikte bulalım.</em></h1>
-          <p>Seçkin portföy, yerel uzmanlık ve şeffaf danışmanlıkla yeni yaşamınıza güvenle başlayın.</p>
+          <span className="hero-index">M / 01 — Seçkin gayrimenkuller</span>
+          <h1><span>Bir ev değil,</span><strong>doğru hayatı</strong><em>seçin.</em></h1>
+          <p>Herkes ilan gösterir. Biz yaşam biçiminize, yatırım hedefinize ve yarınınıza uyan adresleri seçeriz.</p>
+          <div className="hero-links">
+            <a href="#ilanlar">Portföyü keşfet <span>↘</span></a>
+            <a href="#iletisim">Mülkünüzü değerlendirelim</a>
+          </div>
+        </div>
+
+        <div className="hero-visual">
+          <img src={listings[0].image} alt="Boğaz manzaralı seçkin Mira Emlak portföyü" />
+          <div className="hero-visual-meta"><span>İstanbul / 2026</span><span>Mira Selected</span></div>
+          <button type="button" onClick={() => setSelected(listings[0])} aria-label="Öne çıkan ilanı incele">↗</button>
+          <div className="hero-visual-caption">
+            <small>Beşiktaş · İstanbul</small>
+            <strong>Boğaz hattında<br />yeni bir perspektif.</strong>
+            <span>18.750.000 TL</span>
+          </div>
         </div>
 
         <form className="property-search" onSubmit={submitSearch}>
@@ -203,18 +216,22 @@ export default function Home() {
         </form>
 
         <div className="hero-stats" aria-label="Mira Emlak istatistikleri">
-          <div><strong>12+</strong><span>Yıllık deneyim</span></div>
-          <div><strong>480</strong><span>Mutlu müşteri</span></div>
-          <div><strong>96</strong><span>Aktif portföy</span></div>
+          <div><strong>12</strong><span>yıllık uzmanlık</span></div>
+          <div><strong>480</strong><span>başarılı eşleşme</span></div>
+          <div><strong>%98</strong><span>tavsiye oranı</span></div>
         </div>
       </section>
 
+      <div className="editorial-ticker" aria-hidden="true">
+        <div><span>Seçilmiş portföy</span><b>✦</b><span>Yerel uzmanlık</span><b>✦</b><span>Doğru yatırım</span><b>✦</b><span>Seçilmiş portföy</span><b>✦</b><span>Yerel uzmanlık</span></div>
+      </div>
+
       <section className="category-strip" aria-label="Gayrimenkul kategorileri">
-        <p>Aradığınız mülkü keşfedin</p>
+        <p>Portföyü yaşam biçiminize göre keşfedin</p>
         <div>
-          {["Konut", "Villa", "Arsa", "İş yeri"].map((item) => (
+          {["Konut", "Villa", "Arsa", "İş yeri"].map((item, index) => (
             <button key={item} type="button" onClick={() => { setKind(item); document.getElementById("ilanlar")?.scrollIntoView({ behavior: "smooth" }); }}>
-              <span aria-hidden="true">{item === "Konut" ? "⌂" : item === "Villa" ? "◇" : item === "Arsa" ? "⌁" : "▦"}</span>{item}<small>↗</small>
+              <i>0{index + 1}</i><span>{item}</span><small>↗</small>
             </button>
           ))}
         </div>
@@ -222,7 +239,7 @@ export default function Home() {
 
       <section className="featured" id="ilanlar">
         <div className="section-heading">
-          <div><span className="eyebrow">Güncel portföy</span><h2>Size özel seçtiklerimiz</h2></div>
+          <div><span className="eyebrow">Mira / Selected</span><h2>Piyasada olan değil,<br /><em>sizin için seçilenler.</em></h2></div>
           <p>{filteredListings.length} ilan bulundu</p>
         </div>
         <div className="listing-filter" aria-label="Hızlı ilan filtresi">
@@ -258,15 +275,15 @@ export default function Home() {
 
       <section className="value-band">
         <p>Mülkünüzü satmayı veya kiralamayı mı düşünüyorsunuz?</p>
-        <h2>Değerini tahmin etmeyin.<br /><em>Birlikte hesaplayalım.</em></h2>
-        <a href="#iletisim">Ücretsiz değerleme isteyin <span>→</span></a>
+        <h2>Mülkünüz bir ilandan<br /><em>daha fazlasını hak ediyor.</em></h2>
+        <a href="#iletisim">Özel değerleme dosyanızı isteyin <span>↗</span></a>
       </section>
 
       <section className="services" id="hizmetler">
         <div className="services-intro">
           <span className="eyebrow">Neden Mira Emlak?</span>
-          <h2>Bir ilandan<br />çok daha fazlası.</h2>
-          <p>Gayrimenkul kararları büyük kararlardır. Bölge bilgimizi, güçlü pazarlama kabiliyetimizi ve şeffaf iletişimi aynı masada buluşturuyoruz.</p>
+          <h2>Veri kadar<br /><em>sezgiye de</em> inanırız.</h2>
+          <p>Metrekareyi herkes hesaplar. Biz sokağın ritmini, semtin yarınını ve bir evin size nasıl hissettireceğini de hesaba katarız.</p>
         </div>
         <div className="services-list">
           {services.map(([number, title, description]) => (
@@ -282,7 +299,7 @@ export default function Home() {
         </div>
         <div className="about-copy">
           <span className="eyebrow">Yerel uzman, güçlü temsil</span>
-          <h2>İyi bir danışman,<br /><em>doğru soruları sorar.</em></h2>
+          <h2>Önce sizi anlar,<br /><em>sonra adresi buluruz.</em></h2>
           <p>Önce sizi, hedeflerinizi ve zamanlamanızı anlıyoruz. Ardından bölge verileriyle net bir yol haritası çıkarıp sürecin her anında ulaşılabilir oluyoruz.</p>
           <blockquote>“Evinizi değil, hayatınızın bir sonraki adımını birlikte planlıyoruz.”</blockquote>
           <a href="#iletisim">Tanışma görüşmesi planla <span>→</span></a>
@@ -290,7 +307,7 @@ export default function Home() {
       </section>
 
       <section className="testimonials">
-        <div className="section-heading"><div><span className="eyebrow">Müşteri deneyimleri</span><h2>Güvenle sonuçlanan hikâyeler</h2></div></div>
+        <div className="section-heading"><div><span className="eyebrow">Müşteri deneyimleri</span><h2>Kararından emin olanlar.</h2></div><span className="testimonial-index">03 / gerçek hikâye</span></div>
         <div className="testimonial-grid">
           <article><div className="stars">★★★★★</div><p>“Üç haftada doğru alıcıyla buluştuk. Fiyatlama ve süreç yönetimi baştan sona çok netti.”</p><footer><strong>Selin A.</strong><span>Ev sahibi · İstanbul</span></footer></article>
           <article><div className="stars">★★★★★</div><p>“Şehir dışından ev ararken tüm detayları bizim için kontrol ettiler. Güven duygusu paha biçilemezdi.”</p><footer><strong>Mert &amp; Derya K.</strong><span>Alıcı · İzmir</span></footer></article>
@@ -301,7 +318,7 @@ export default function Home() {
       <section className="contact" id="iletisim">
         <div className="contact-copy">
           <span className="eyebrow">İlk adımı birlikte atalım</span>
-          <h2>Gayrimenkul hedefinizi<br /><em>konuşalım.</em></h2>
+          <h2>Sıradaki adresiniz<br /><em>bir konuşmayla başlasın.</em></h2>
           <p>Formu doldurun; ihtiyacınızı dinlemek ve size özel yol haritasını paylaşmak için geri dönüş yapalım.</p>
           <div className="contact-lines"><a href="tel:+905550000000">+90 555 000 00 00</a><a href="mailto:danisman@miraemlak.com">danisman@miraemlak.com</a></div>
         </div>
@@ -315,7 +332,7 @@ export default function Home() {
       </section>
 
       <footer className="site-footer">
-        <div className="footer-top"><a className="brand footer-brand" href="#anasayfa"><span className="brand-mark">M</span><span>Mira <strong>Emlak</strong></span></a><p>Doğru ev. Doğru yatırım.<br />Güvenilir danışmanlık.</p></div>
+        <div className="footer-top"><a className="brand footer-brand" href="#anasayfa"><span className="brand-mark">M</span><span>Mira <strong>Emlak</strong></span></a><p>Seçilmiş adresler.<br />Düşünülmüş kararlar.</p></div>
         <div className="footer-bottom"><span>© 2026 Mira Emlak. Tüm hakları saklıdır.</span><div><a href="#ilanlar">İlanlar</a><a href="#hizmetler">Hizmetler</a><a href="#iletisim">İletişim</a></div></div>
       </footer>
 
