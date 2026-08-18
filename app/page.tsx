@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { CSSProperties, FormEvent, useMemo, useState } from "react";
 
 type Listing = {
   id: number;
@@ -114,6 +114,13 @@ const services = [
   ["03", "Uçtan uca süreç", "İlan sunumundan tapu gününe kadar her adımı güvenle yönetiriz."],
 ];
 
+const marketData = {
+  İstanbul: { demand: 87, time: "19 gün", trend: "+%12.8", label: "Yüksek talep" },
+  İzmir: { demand: 74, time: "24 gün", trend: "+%9.4", label: "Hızlanan bölge" },
+  Ankara: { demand: 69, time: "27 gün", trend: "+%7.1", label: "Dengeli piyasa" },
+  Bursa: { demand: 63, time: "31 gün", trend: "+%6.3", label: "Yükselen değer" },
+};
+
 type Language = "TR" | "EN" | "DE" | "AR";
 
 const translations: Record<Language, {
@@ -153,6 +160,7 @@ export default function Home() {
   const [heroIndex, setHeroIndex] = useState(0);
   const [language, setLanguage] = useState<Language>("TR");
   const [signLanguage, setSignLanguage] = useState(false);
+  const [marketCity, setMarketCity] = useState<keyof typeof marketData>("İstanbul");
 
   const heroListings = listings.filter((item) => item.featured);
   const heroListing = heroListings[heroIndex];
@@ -190,11 +198,11 @@ export default function Home() {
   }
 
   return (
-    <main className="site-shell" dir={language === "AR" ? "rtl" : "ltr"}>
+    <main className="site-shell site-v5" dir={language === "AR" ? "rtl" : "ltr"}>
       <header className="site-header site-header-v4">
         <a className="brand" href="#anasayfa" aria-label="Mira Emlak ana sayfa">
           <span className="brand-mark"><i>M</i><b>/</b></span>
-          <span>MIRA<small>Real Estate Network</small></span>
+          <span>MIRA<small>Property Intelligence</small></span>
         </a>
         <nav className={menuOpen ? "open" : ""} aria-label="Ana menü">
           <a href="#anasayfa" onClick={() => setMenuOpen(false)}>{copy.featured}</a>
@@ -203,6 +211,7 @@ export default function Home() {
           <a href="#uyelik" onClick={() => setMenuOpen(false)}>{copy.membership}</a>
           <a href="#iletisim" onClick={() => setMenuOpen(false)}>{copy.contact}</a>
         </nav>
+        <span className="header-coordinate">41.0082° N / 28.9784° E</span>
         <div className="header-actions">
           <label className="language-switcher"><span className="sr-only">Dil seçin</span><select value={language} onChange={(event) => setLanguage(event.target.value as Language)} aria-label="Dil seçin"><option>TR</option><option>EN</option><option>DE</option><option>AR</option></select></label>
           <a className="header-cta" href="#uyelik">{copy.start} <span>↗</span></a>
@@ -210,21 +219,30 @@ export default function Home() {
         </div>
       </header>
 
-      <section className="showcase" id="anasayfa">
+      <section className="showcase showcase-v5" id="anasayfa" onPointerMove={(event) => {
+        const frame = event.currentTarget.getBoundingClientRect();
+        event.currentTarget.style.setProperty("--mx", `${((event.clientX - frame.left) / frame.width) * 100}%`);
+        event.currentTarget.style.setProperty("--my", `${((event.clientY - frame.top) / frame.height) * 100}%`);
+      }}>
         <div className="showcase-backdrop" key={heroListing.id}><img src={heroListing.image} alt="" /><span /></div>
         <div className="showcase-grid" aria-hidden="true" />
+        <div className="showcase-word" aria-hidden="true">MIRA</div>
+        <div className="showcase-orbit" aria-hidden="true"><i /><i /><i /></div>
+        <div className="showcase-scan" aria-hidden="true" />
+        <div className="showcase-status"><span><i /> CANLI PORTFÖY</span><b>MR / 2026 — {String(heroListing.id).padStart(3, "0")}</b></div>
         <div className="showcase-copy">
-          <span className="showcase-label"><i /> {copy.portfolio} / 0{heroIndex + 1}</span>
+          <span className="showcase-label"><i /> MIRA SELECT / 0{heroIndex + 1}</span>
           <p>{heroListing.district} · {heroListing.city}</p>
           <h1>{heroListing.title}</h1>
           <div className="showcase-facts"><span>{heroListing.rooms}<small>Oda</small></span><span>{heroListing.area}<small>Brüt alan</small></span><span>{heroListing.floor}<small>Konum</small></span></div>
           <div className="showcase-actions"><button type="button" onClick={() => setSelected(heroListing)}>{copy.explore} <span>↗</span></button><a href="#ilanlar">{copy.listings}</a></div>
         </div>
-        <div className="showcase-price"><span>{copy.salesValue}</span><strong>{heroListing.price}</strong><small>{copy.verified}</small></div>
+        <div className="showcase-price"><span>{copy.salesValue}</span><strong>{heroListing.price}</strong><small><i /> {copy.verified}</small></div>
         <div className="showcase-nav" aria-label="Önerilen ilanlar">
           {heroListings.map((home, index) => <button type="button" className={heroIndex === index ? "active" : ""} key={home.id} onClick={() => setHeroIndex(index)} aria-label={`${home.title} ilanını göster`}><img src={home.image} alt="" /><span>0{index + 1}</span><strong>{home.district}</strong></button>)}
         </div>
-        <div className="showcase-counter"><strong>0{heroIndex + 1}</strong><span>/ 0{heroListings.length}</span></div>
+        <div className="showcase-counter"><strong>0{heroIndex + 1}</strong><span>/ 0{heroListings.length}</span><i style={{ "--progress": `${((heroIndex + 1) / heroListings.length) * 100}%` } as CSSProperties} /></div>
+        <div className="showcase-scroll" aria-hidden="true"><span>SCROLL TO DECODE</span><i /></div>
 
         <form className="property-search property-search-v4" onSubmit={submitSearch}>
           <div className="search-tabs" role="group" aria-label="İlan türü">
@@ -249,12 +267,38 @@ export default function Home() {
       </section>
 
       <div className="editorial-ticker" aria-hidden="true">
-        <div><span>DOĞRULANMIŞ PORTFÖY</span><b>✳</b><span>AKILLI EŞLEŞME</span><b>✳</b><span>ÇOK DİLLİ DENEYİM</span><b>✳</b><span>İLK YIL ÜCRETSİZ</span><b>✳</b></div>
+        <div><span>MIRA PROPERTY INTELLIGENCE</span><b>●</b><span>DOĞRULANMIŞ PORTFÖY</span><b>●</b><span>CANLI BÖLGE VERİSİ</span><b>●</b><span>AKILLI EŞLEŞME</span><b>●</b><span>MIRA PROPERTY INTELLIGENCE</span><b>●</b></div>
       </div>
+
+      <section className="signal-board" aria-label="MIRA bölge analiz ekranı">
+        <div className="signal-heading">
+          <span>02 / MARKET SIGNAL</span>
+          <h2>Şehir konuşuyor.<br /><em>MIRA dinliyor.</em></h2>
+          <p>Yalnızca ilan göstermiyoruz. Talep yoğunluğunu, satış hızını ve değer değişimini okuyarak doğru kararı görünür kılıyoruz.</p>
+        </div>
+        <div className="signal-console">
+          <div className="signal-map" aria-hidden="true">
+            <div className="signal-radar"><i /><i /><i /><i /></div>
+            <span className="map-point p1" /><span className="map-point p2" /><span className="map-point p3" /><span className="map-point p4" /><span className="map-point p5" />
+            <b>LIVE<br />MARKET<br />PULSE</b>
+            <small>41°01&apos;N<br />28°58&apos;E</small>
+          </div>
+          <div className="signal-data">
+            <div className="signal-tabs" role="group" aria-label="Bölge seçimi">
+              {(Object.keys(marketData) as Array<keyof typeof marketData>).map((item) => <button type="button" className={marketCity === item ? "active" : ""} key={item} onClick={() => setMarketCity(item)}><span>{item}</span><small>{marketData[item].label}</small></button>)}
+            </div>
+            <div className="signal-metrics">
+              <article><small>TALEP ENDEKSİ</small><strong>{marketData[marketCity].demand}<sup>/100</sup></strong><i style={{ "--metric": `${marketData[marketCity].demand}%` } as CSSProperties} /></article>
+              <article><small>ORT. SONUÇLANMA</small><strong>{marketData[marketCity].time}</strong><span>Son 90 gün</span></article>
+              <article><small>DEĞER DEĞİŞİMİ</small><strong>{marketData[marketCity].trend}</strong><span>Yıllık projeksiyon ↗</span></article>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section className="cinematic" id="tanitim">
         <div className="cinematic-heading">
-          <span>{copy.filmEyebrow}</span>
+          <span>03 / MIRA EXPERIENCE</span>
           <h2>{copy.filmTitle}</h2>
           <p>{copy.filmBody}</p>
         </div>
@@ -285,7 +329,7 @@ export default function Home() {
       </section>
 
       <section className="category-strip" aria-label="Gayrimenkul kategorileri">
-        <div className="category-intro"><span>03 / Seçim alanı</span><h2>Aradığınız mülkü<br /><em>tek bakışta bulun.</em></h2><p>Konut, villa, arsa veya iş yeri. Doğrulanmış portföyü ihtiyacınıza göre daraltın.</p></div>
+        <div className="category-intro"><span>04 / Seçim alanı</span><h2>Aradığınız mülkü<br /><em>tek bakışta bulun.</em></h2><p>Konut, villa, arsa veya iş yeri. Doğrulanmış portföyü ihtiyacınıza göre daraltın.</p></div>
         <div>
           {["Konut", "Villa", "Arsa", "İş yeri"].map((item, index) => (
             <button key={item} type="button" onClick={() => { setKind(item); document.getElementById("ilanlar")?.scrollIntoView({ behavior: "smooth" }); }}>
@@ -297,7 +341,7 @@ export default function Home() {
 
       <section className="featured" id="ilanlar">
         <div className="section-heading">
-          <div><span className="eyebrow">04 / MIRA COLLECTION</span><h2>Sizin için<br /><em>öne çıkanlar.</em></h2></div>
+          <div><span className="eyebrow">05 / MIRA COLLECTION</span><h2>Sizin için<br /><em>öne çıkanlar.</em></h2></div>
           <p>{String(filteredListings.length).padStart(2, "0")} mekân yayında</p>
         </div>
         <div className="listing-filter" aria-label="Hızlı ilan filtresi">
@@ -334,7 +378,7 @@ export default function Home() {
       </section>
 
       <section className="value-band">
-        <span className="value-number">05</span>
+        <span className="value-number">06</span>
         <p>Satmak / kiralamak / yeniden konumlandırmak</p>
         <h2>Mülkünüzü<br /><em>markaya dönüştürün.</em></h2>
         <div><p>Her mülkün anlatılacak bir karakteri vardır. Biz onu sıradan ilan kalabalığından çıkarır, doğru alıcının karşısına bir marka gibi koyarız.</p><a href="#iletisim">Mülkünüzü MIRA’ya alın <span>↗</span></a></div>
@@ -342,7 +386,7 @@ export default function Home() {
 
       <section className="services" id="hizmetler">
         <div className="services-intro">
-          <span className="eyebrow">06 / ÇALIŞMA BİÇİMİ</span>
+          <span className="eyebrow">07 / ÇALIŞMA BİÇİMİ</span>
           <h2>Az konuşur,<br /><em>iyi seçeriz.</em></h2>
           <p>Bir algoritma gibi hızlı, iyi bir editör gibi seçiciyiz. Gürültüyü eler, kararı kolaylaştırırız.</p>
         </div>
@@ -359,7 +403,7 @@ export default function Home() {
           <div><strong>%98</strong><span>Tavsiye edilme oranı</span></div>
         </div>
         <div className="about-copy">
-          <span className="eyebrow">07 / MIRA MANİFESTO</span>
+          <span className="eyebrow">08 / MIRA MANİFESTO</span>
           <h2>Bir evin değeri,<br /><em>ilan fiyatından büyüktür.</em></h2>
           <p>Semtin sabah sesini, pencereden düşen ışığı, doğru yatırımın sessiz güvenini de hesaba katarız. Çünkü gayrimenkul, rakamlardan önce bir yaşam kararıdır.</p>
           <blockquote>“Doğru adres, insanın kendine verdiği en büyük sözlerden biridir.”</blockquote>
@@ -369,7 +413,7 @@ export default function Home() {
 
       <section className="membership" id="uyelik">
         <div className="membership-intro">
-          <span>08 / MIRA NETWORK</span>
+          <span>09 / MIRA NETWORK</span>
           <p>Demo üyelik modeli</p>
           <h2>İlk yıl<br /><em>bizden.</em></h2>
           <div><strong>12</strong><span>AY<br />ÜCRETSİZ</span></div>
@@ -390,7 +434,7 @@ export default function Home() {
       </section>
 
       <section className="testimonials">
-        <div className="section-heading"><div><span className="eyebrow">09 / GERÇEK SESLER</span><h2>İyi kararların<br /><em>ardından.</em></h2></div><span className="testimonial-index">MIRA / NOTES</span></div>
+        <div className="section-heading"><div><span className="eyebrow">10 / GERÇEK SESLER</span><h2>İyi kararların<br /><em>ardından.</em></h2></div><span className="testimonial-index">MIRA / NOTES</span></div>
         <div className="testimonial-grid">
           <article><div className="stars">★★★★★</div><p>“Üç haftada doğru alıcıyla buluştuk. Fiyatlama ve süreç yönetimi baştan sona çok netti.”</p><footer><strong>Selin A.</strong><span>Ev sahibi · İstanbul</span></footer></article>
           <article><div className="stars">★★★★★</div><p>“Şehir dışından ev ararken tüm detayları bizim için kontrol ettiler. Güven duygusu paha biçilemezdi.”</p><footer><strong>Mert &amp; Derya K.</strong><span>Alıcı · İzmir</span></footer></article>
@@ -400,7 +444,7 @@ export default function Home() {
 
       <section className="contact" id="iletisim">
         <div className="contact-copy">
-          <span className="eyebrow">10 / BAŞLANGIÇ</span>
+          <span className="eyebrow">11 / BAŞLANGIÇ</span>
           <h2>Bir sonraki<br /><em>adresiniz?</em></h2>
           <p>Kısa bir not bırakın. Size daha fazla ilan değil, daha net bir yönle dönelim.</p>
           <div className="contact-lines"><a href="tel:+905550000000">+90 555 000 00 00</a><a href="mailto:danisman@miraemlak.com">danisman@miraemlak.com</a></div>
