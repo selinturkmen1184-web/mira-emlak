@@ -264,21 +264,21 @@ export default function Home() {
       </section>
 
       <div className="editorial-ticker" aria-hidden="true">
-        <div><span>MIRA PROPERTY INTELLIGENCE</span><b>●</b><span>DOĞRULANMIŞ PORTFÖY</span><b>●</b><span>CANLI BÖLGE VERİSİ</span><b>●</b><span>AKILLI EŞLEŞME</span><b>●</b><span>MIRA PROPERTY INTELLIGENCE</span><b>●</b></div>
+        <div><span>SEÇKİN PORTFÖY</span><b>◆</b><span>GÜVENLİ DANIŞMANLIK</span><b>◆</b><span>DOĞRU YATIRIM</span><b>◆</b><span>YENİ NESİL GAYRİMENKUL</span><b>◆</b><span>SEÇKİN PORTFÖY</span><b>◆</b></div>
       </div>
 
       <section className="signal-board" aria-label="MIRA bölge analiz ekranı">
         <div className="signal-heading">
-          <span>02 / MARKET SIGNAL</span>
-          <h2>Şehir konuşuyor.<br /><em>MIRA dinliyor.</em></h2>
-          <p>Yalnızca ilan göstermiyoruz. Talep yoğunluğunu, satış hızını ve değer değişimini okuyarak doğru kararı görünür kılıyoruz.</p>
+          <span>02 / BÖLGE ANALİZİ</span>
+          <h2>Bölgeyi okuyun.<br /><em>Doğru yatırımı seçin.</em></h2>
+          <p>Talep yoğunluğunu, satış hızını ve değer değişimini sade verilerle okuyarak güvenli yatırım kararını görünür kılıyoruz.</p>
         </div>
         <div className="signal-console">
           <div className="signal-map" aria-hidden="true">
             <div className="signal-radar"><i /><i /><i /><i /></div>
             <span className="map-point p1" /><span className="map-point p2" /><span className="map-point p3" /><span className="map-point p4" /><span className="map-point p5" />
-            <b>LIVE<br />MARKET<br />PULSE</b>
-            <small>41°01&apos;N<br />28°58&apos;E</small>
+            <b>BÖLGE<br />DEĞER<br />HARİTASI</b>
+            <small>MIRA<br />ANALİZ MERKEZİ</small>
           </div>
           <div className="signal-data">
             <div className="signal-tabs" role="group" aria-label="Bölge seçimi">
@@ -295,7 +295,7 @@ export default function Home() {
 
       <section className="cinematic" id="tanitim">
         <div className="cinematic-heading">
-          <span>03 / MIRA EXPERIENCE</span>
+          <span>03 / MIRA HİKÂYESİ</span>
           <h2>{copy.filmTitle}</h2>
           <p>{copy.filmBody}</p>
         </div>
@@ -338,7 +338,7 @@ export default function Home() {
 
       <section className="featured" id="ilanlar">
         <div className="section-heading">
-          <div><span className="eyebrow">05 / MIRA COLLECTION</span><h2>Sizin için<br /><em>öne çıkanlar.</em></h2></div>
+          <div><span className="eyebrow">05 / SEÇKİN PORTFÖY</span><h2>Sizin için<br /><em>öne çıkanlar.</em></h2></div>
           <p>{String(filteredListings.length).padStart(2, "0")} mekân yayında</p>
         </div>
         <div className="listing-filter" aria-label="Hızlı ilan filtresi">
@@ -410,7 +410,7 @@ export default function Home() {
 
       <section className="membership" id="uyelik">
         <div className="membership-intro">
-          <span>09 / MIRA NETWORK</span>
+          <span>09 / MIRA ÜYELİK</span>
           <p>Demo üyelik modeli</p>
           <h2>İlk yıl<br /><em>bizden.</em></h2>
           <div><strong>12</strong><span>AY<br />ÜCRETSİZ</span></div>
@@ -431,7 +431,7 @@ export default function Home() {
       </section>
 
       <section className="testimonials">
-        <div className="section-heading"><div><span className="eyebrow">10 / GERÇEK SESLER</span><h2>İyi kararların<br /><em>ardından.</em></h2></div><span className="testimonial-index">MIRA / NOTES</span></div>
+        <div className="section-heading"><div><span className="eyebrow">10 / GERÇEK SESLER</span><h2>İyi kararların<br /><em>ardından.</em></h2></div><span className="testimonial-index">MIRA / YORUMLAR</span></div>
         <div className="testimonial-grid">
           <article><div className="stars">★★★★★</div><p>“Üç haftada doğru alıcıyla buluştuk. Fiyatlama ve süreç yönetimi baştan sona çok netti.”</p><footer><strong>Selin A.</strong><span>Ev sahibi · İstanbul</span></footer></article>
           <article><div className="stars">★★★★★</div><p>“Şehir dışından ev ararken tüm detayları bizim için kontrol ettiler. Güven duygusu paha biçilemezdi.”</p><footer><strong>Mert &amp; Derya K.</strong><span>Alıcı · İzmir</span></footer></article>

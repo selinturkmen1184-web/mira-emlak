@@ -20,15 +20,15 @@ test("Mira Emlak ana sayfasını sunucu tarafında oluşturur", async () => {
 
   const html = await response.text();
   assert.match(html, /<html[^>]*lang="tr"/i);
-  assert.match(html, /<title>MIRA \| Property Intelligence<\/title>/i);
-  assert.match(html, /MIRA SELECT/);
+  assert.match(html, /<title>MIRA \| Seçkin Gayrimenkul &amp; Yatırım<\/title>/i);
+  assert.match(html, /ÖNE ÇIKAN İLAN/);
   assert.match(html, /Yeni nesil gayrimenkul ağı/);
-  assert.match(html, /MARKET SIGNAL/);
-  assert.match(html, /Şehir konuşuyor/);
+  assert.match(html, /BÖLGE ANALİZİ/);
+  assert.match(html, /Bölgeyi okuyun/);
   assert.match(html, /Boğaz manzaralı, teraslı daire/);
   assert.match(html, /İlk yıl/);
   assert.match(html, /mira-cinematic\.mp4/);
-  assert.match(html, /https:\/\/mira-emlak\.pages\.dev\/og-v5\.png/);
+  assert.match(html, /https:\/\/mira-emlak\.pages\.dev\/og-v6\.jpg/);
   assert.doesNotMatch(html, /codex-preview|SkeletonPreview|Your site is taking shape/i);
 });
 
