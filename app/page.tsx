@@ -202,7 +202,7 @@ export default function Home() {
       <header className="site-header site-header-v4">
         <a className="brand" href="#anasayfa" aria-label="Mira Emlak ana sayfa">
           <span className="brand-mark"><i>M</i><b>/</b></span>
-          <span>MIRA<small>Property Intelligence</small></span>
+          <span>MIRA<small>Gayrimenkul &amp; Yatırım</small></span>
         </a>
         <nav className={menuOpen ? "open" : ""} aria-label="Ana menü">
           <a href="#anasayfa" onClick={() => setMenuOpen(false)}>{copy.featured}</a>
@@ -211,7 +211,6 @@ export default function Home() {
           <a href="#uyelik" onClick={() => setMenuOpen(false)}>{copy.membership}</a>
           <a href="#iletisim" onClick={() => setMenuOpen(false)}>{copy.contact}</a>
         </nav>
-        <span className="header-coordinate">41.0082° N / 28.9784° E</span>
         <div className="header-actions">
           <label className="language-switcher"><span className="sr-only">Dil seçin</span><select value={language} onChange={(event) => setLanguage(event.target.value as Language)} aria-label="Dil seçin"><option>TR</option><option>EN</option><option>DE</option><option>AR</option></select></label>
           <a className="header-cta" href="#uyelik">{copy.start} <span>↗</span></a>
@@ -226,12 +225,10 @@ export default function Home() {
       }}>
         <div className="showcase-backdrop" key={heroListing.id}><img src={heroListing.image} alt="" /><span /></div>
         <div className="showcase-grid" aria-hidden="true" />
-        <div className="showcase-word" aria-hidden="true">MIRA</div>
-        <div className="showcase-orbit" aria-hidden="true"><i /><i /><i /></div>
-        <div className="showcase-scan" aria-hidden="true" />
-        <div className="showcase-status"><span><i /> CANLI PORTFÖY</span><b>MR / 2026 — {String(heroListing.id).padStart(3, "0")}</b></div>
+        <div className="showcase-word" aria-hidden="true">PORTFÖY</div>
+        <div className="showcase-estate-badge"><span>Günün önerilen ilanı</span><strong>{heroListing.district} / {heroListing.city}</strong></div>
         <div className="showcase-copy">
-          <span className="showcase-label"><i /> MIRA SELECT / 0{heroIndex + 1}</span>
+          <span className="showcase-label"><i /> ÖNE ÇIKAN İLAN / 0{heroIndex + 1}</span>
           <p>{heroListing.district} · {heroListing.city}</p>
           <h1>{heroListing.title}</h1>
           <div className="showcase-facts"><span>{heroListing.rooms}<small>Oda</small></span><span>{heroListing.area}<small>Brüt alan</small></span><span>{heroListing.floor}<small>Konum</small></span></div>
@@ -239,10 +236,10 @@ export default function Home() {
         </div>
         <div className="showcase-price"><span>{copy.salesValue}</span><strong>{heroListing.price}</strong><small><i /> {copy.verified}</small></div>
         <div className="showcase-nav" aria-label="Önerilen ilanlar">
-          {heroListings.map((home, index) => <button type="button" className={heroIndex === index ? "active" : ""} key={home.id} onClick={() => setHeroIndex(index)} aria-label={`${home.title} ilanını göster`}><img src={home.image} alt="" /><span>0{index + 1}</span><strong>{home.district}</strong></button>)}
+          {heroListings.map((home, index) => <button type="button" className={heroIndex === index ? "active" : ""} key={home.id} onClick={() => setHeroIndex(index)} aria-label={`${home.title} ilanını göster`}><img src={home.image} alt="" /><span>0{index + 1} · {home.kind}</span><strong>{home.district}</strong></button>)}
         </div>
         <div className="showcase-counter"><strong>0{heroIndex + 1}</strong><span>/ 0{heroListings.length}</span><i style={{ "--progress": `${((heroIndex + 1) / heroListings.length) * 100}%` } as CSSProperties} /></div>
-        <div className="showcase-scroll" aria-hidden="true"><span>SCROLL TO DECODE</span><i /></div>
+        <div className="showcase-scroll" aria-hidden="true"><span>İLANLARI KEŞFET</span><i /></div>
 
         <form className="property-search property-search-v4" onSubmit={submitSearch}>
           <div className="search-tabs" role="group" aria-label="İlan türü">
