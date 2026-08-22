@@ -24,7 +24,8 @@ test("RealYerin ana sayfasını sunucu tarafında oluşturur", async () => {
   assert.match(html, /REALYERİN/);
   assert.match(html, /Yeni bir hayatın ilk karesi/);
   assert.match(html, /ry-page-progress/);
-  assert.match(html, /REALYERİN SEÇKİSİ/);
+  assert.match(html, /YENİ EMLAK SİSTEMİ/);
+  assert.match(html, /outline-text">BUL\./);
   assert.match(html, /hero-auto-progress/);
   assert.match(html, /HIZLI KEŞİF/);
   assert.match(html, /NEDEN REALYERİN/);

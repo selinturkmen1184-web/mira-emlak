@@ -57,6 +57,7 @@ export default function Home() {
   const [heroTransitioning, setHeroTransitioning] = useState(false);
   const [filmPlaying, setFilmPlaying] = useState(false);
   const [introVisible, setIntroVisible] = useState(true);
+  const [motionPaused, setMotionPaused] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
   const filmRef = useRef<HTMLVideoElement>(null);
   const heroTimer = useRef<number | null>(null);
@@ -76,7 +77,7 @@ export default function Home() {
 
   useEffect(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduceMotion) return;
+    if (reduceMotion || motionPaused) return;
     const interval = window.setInterval(() => {
       setHeroTransitioning(true);
       heroTimer.current = window.setTimeout(() => {
@@ -88,7 +89,7 @@ export default function Home() {
       window.clearInterval(interval);
       if (heroTimer.current) window.clearTimeout(heroTimer.current);
     };
-  }, [heroListings.length]);
+  }, [heroListings.length, motionPaused]);
 
   useEffect(() => {
     const hero = heroRef.current;
@@ -141,7 +142,7 @@ export default function Home() {
       return;
     }
     document.body.classList.add("ry-opening-lock");
-    const timer = window.setTimeout(closeIntro, 3400);
+    const timer = window.setTimeout(closeIntro, 2300);
     return () => {
       window.clearTimeout(timer);
       document.body.classList.remove("ry-opening-lock");
@@ -253,7 +254,7 @@ export default function Home() {
   }
 
   return (
-    <main ref={mainRef} className="mira-site market-v9" dir={language === "AR" ? "rtl" : "ltr"}>
+    <main ref={mainRef} className={`mira-site market-v9 market-v10 ${motionPaused ? "motion-paused" : ""}`} dir={language === "AR" ? "rtl" : "ltr"}>
       <div className={`ry-opening ${introVisible ? "is-active" : "is-finished"}`} aria-hidden={!introVisible}>
         <div className="opening-coordinates"><span>41° 02′ N</span><i /><span>29° 00′ E</span></div>
         <div className="opening-mark"><span>REAL</span><span>YERİN</span></div>
@@ -267,7 +268,7 @@ export default function Home() {
       <header className="mira-header">
         <a className="mira-brand" href="#anasayfa" aria-label="RealYerin ana sayfa"><span className="mira-monogram">R<span>●</span></span><span className="mira-wordmark">REALYERİN<small>YERİNİ BUL. YERİNDE BUL.</small></span></a>
         <nav className={menuOpen ? "open" : ""} aria-label="Ana menü"><a href="#portfoy" onClick={() => { setIntent("Satılık"); setMenuOpen(false); }}>Satılık</a><a href="#portfoy" onClick={() => { setIntent("Kiralık"); setMenuOpen(false); }}>Kiralık</a><a href="#portfoy" onClick={() => setMenuOpen(false)}>Yeni projeler</a><a href="#tanitim" onClick={() => setMenuOpen(false)}>RealYerin'i tanı</a></nav>
-        <div className="mira-header-actions"><label className="mira-language"><span className="sr-only">Dil seçin</span><select value={language} onChange={(event) => setLanguage(event.target.value as Language)} aria-label="Dil seçin"><option>TR</option><option>EN</option><option>DE</option><option>AR</option></select></label><a className="mira-login" href="#uyelik">Giriş</a><a className="mira-contact-link" href="#uyelik">İlan ver<span>↗</span></a><button className="mira-menu" type="button" aria-label="Menüyü aç veya kapat" aria-expanded={menuOpen} onClick={() => setMenuOpen((value) => !value)}>{menuOpen ? "×" : "☰"}</button></div>
+        <div className="mira-header-actions"><label className="mira-language"><span className="sr-only">Dil seçin</span><select value={language} onChange={(event) => setLanguage(event.target.value as Language)} aria-label="Dil seçin"><option>TR</option><option>EN</option><option>DE</option><option>AR</option></select></label><button className="ry-motion-toggle" type="button" aria-label={motionPaused ? "Hareketi başlat" : "Hareketi durdur"} aria-pressed={motionPaused} onClick={() => setMotionPaused((value) => !value)}><span>{motionPaused ? "▶" : "Ⅱ"}</span>{motionPaused ? "Başlat" : "Durdur"}</button><a className="mira-contact-link" href="#uyelik">İlan ver<span>↗</span></a><button className="mira-menu" type="button" aria-label="Menüyü aç veya kapat" aria-expanded={menuOpen} onClick={() => setMenuOpen((value) => !value)}>{menuOpen ? "×" : "☰"}</button></div>
       </header>
 
       <section ref={heroRef} className={`mira-hero ${heroTransitioning ? "is-transitioning" : ""}`} id="anasayfa">
@@ -277,13 +278,17 @@ export default function Home() {
         <div className="hero-ghost" aria-hidden="true">YERİN</div>
         <div className="hero-frame" aria-hidden="true"><span>41° 02′ N / 29° 00′ E</span><span>SEÇKİ / 0{heroIndex + 1}</span></div>
         <div className="hero-copy" key={`copy-${heroListing.id}`}>
-          <p className="hero-kicker"><i /> REALYERİN SEÇKİSİ · 0{heroIndex + 1}</p>
-          <span className="hero-location"><b>●</b> {heroListing.district} / {heroListing.city}</span>
-          <h1>{heroListing.title}</h1>
-          <p className="hero-summary">{heroListing.description}</p>
+          <p className="hero-kicker"><i /> TÜRKİYE'NİN YENİ EMLAK SİSTEMİ</p>
+          <h1><span>YERİNİ</span><span className="outline-text">BUL.</span></h1>
+          <a className="hero-listing-bridge" href="#portfoy"><strong>24.800+</strong><span>doğrulanmış yer<i>↓</i></span></a>
+          <div className="hero-feature-copy">
+            <span className="hero-location"><b>●</b> ÖNERİLEN / 0{heroIndex + 1} · {heroListing.district} / {heroListing.city}</span>
+            <h2>{heroListing.title}</h2>
+            <p>{heroListing.description}</p>
+          </div>
           <div className="hero-details"><span><b>{heroListing.rooms}</b><small>ODA</small></span><span><b>{heroListing.area}</b><small>BRÜT ALAN</small></span><span><b>{heroListing.floor}</b><small>KONUM</small></span></div>
           <div className="hero-price"><span>Satış değeri</span><strong>{heroListing.price}</strong><small><i /> Kimliği ve konumu doğrulandı</small></div>
-          <div className="hero-links"><button type="button" onClick={() => setSelected(heroListing)}>Bu yeri keşfet<span>↗</span></button><a href="#portfoy">Tüm seçki <span>↓</span></a></div>
+          <div className="hero-links"><button type="button" onClick={() => setSelected(heroListing)}>Yeri deneyimle<span>↗</span></button><a href="#portfoy">Tüm seçki <span>↓</span></a></div>
         </div>
         <aside className="hero-proof"><span>RY</span><strong>DOĞRULANDI</strong><small>İlan no. RY-{String(heroListing.id).padStart(5, "0")}</small></aside>
         <div className="hero-selector" aria-label="Önerilen ilanlar">{heroListings.map((home, index) => <button type="button" className={heroIndex === index ? "active" : ""} key={home.id} onClick={() => showHero(index)} aria-label={`${home.title} ilanını göster`}><span>0{index + 1}</span><img src={home.image} alt="" /><small><b>{home.district}</b>{home.kind}</small>{heroIndex === index && <i key={`progress-${heroListing.id}`} className="hero-auto-progress" aria-hidden="true" />}</button>)}</div>
@@ -291,6 +296,8 @@ export default function Home() {
         <div className="hero-cinema-bars" aria-hidden="true"><span /><span /></div>
         <form className="mira-search" onSubmit={submitSearch}><div className="search-title"><span>YERİNİ BUL</span><small>24.800+ doğrulanmış ilan</small></div><div className="mira-search-tabs" role="group" aria-label="İlan türü">{(["Satılık", "Kiralık"] as const).map((item) => <button type="button" className={intent === item ? "active" : ""} onClick={() => setIntent(item)} key={item}>{item}</button>)}</div><label><span>Konum</span><select value={city} onChange={(event) => setCity(event.target.value)}><option value="Tümü">Tüm Türkiye</option><option>İstanbul</option><option>İzmir</option><option>Ankara</option><option>Bursa</option></select></label><label><span>Mülk türü</span><select value={kind} onChange={(event) => setKind(event.target.value)}><option>Tümü</option><option>Konut</option><option>Villa</option><option>Arsa</option><option>İş yeri</option></select></label><button className="mira-search-button" type="submit"><span>{filteredListings.length} eşleşme hazır</span><b>Göster <i>↗</i></b></button></form>
       </section>
+
+      <section className="ry-kinetic" aria-label="RealYerin emlak kategorileri"><div>{["SATILIK", "KİRALIK", "YENİ PROJELER", "VİLLA", "ARSA", "İŞ YERİ", "SATILIK", "KİRALIK", "YENİ PROJELER", "VİLLA", "ARSA", "İŞ YERİ"].map((item, index) => <span key={`${item}-${index}`}>{item}<i>×</i></span>)}</div></section>
 
       <section className="ry-trust" aria-label="RealYerin platform bilgileri" data-reveal="fade">
         <p><i /> Şu an 326 kişi RealYerin'de yeni bir yer arıyor</p>
