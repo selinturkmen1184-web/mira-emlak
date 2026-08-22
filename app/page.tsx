@@ -193,12 +193,12 @@ export default function Home() {
       </header>
 
       <section ref={heroRef} className={`mira-hero ${heroTransitioning ? "is-transitioning" : ""}`} id="anasayfa">
-        <div className="hero-photo" key={heroListing.id}><img src={heroListing.image} alt={heroListing.title} /><span /></div>
+        <div className="hero-photo" key={`photo-${heroListing.id}`}><img src={heroListing.image} alt={heroListing.title} /><span /></div>
         <div className="hero-transition" aria-hidden="true"><span>REALYERİN</span></div>
         <div className="hero-grain" aria-hidden="true" />
         <div className="hero-ghost" aria-hidden="true">YERİN</div>
         <div className="hero-frame" aria-hidden="true"><span>41° 02′ N / 29° 00′ E</span><span>SEÇKİ / 0{heroIndex + 1}</span></div>
-        <div className="hero-copy" key={heroListing.id}>
+        <div className="hero-copy" key={`copy-${heroListing.id}`}>
           <p className="hero-kicker"><i /> REALYERİN SEÇKİSİ · 0{heroIndex + 1}</p>
           <span className="hero-location"><b>●</b> {heroListing.district} / {heroListing.city}</span>
           <h1>{heroListing.title}</h1>
@@ -208,7 +208,7 @@ export default function Home() {
           <div className="hero-links"><button type="button" onClick={() => setSelected(heroListing)}>Bu yeri keşfet<span>↗</span></button><a href="#portfoy">Tüm seçki <span>↓</span></a></div>
         </div>
         <aside className="hero-proof"><span>RY</span><strong>DOĞRULANDI</strong><small>İlan no. RY-{String(heroListing.id).padStart(5, "0")}</small></aside>
-        <div className="hero-selector" aria-label="Önerilen ilanlar">{heroListings.map((home, index) => <button type="button" className={heroIndex === index ? "active" : ""} key={home.id} onClick={() => showHero(index)} aria-label={`${home.title} ilanını göster`}><span>0{index + 1}</span><img src={home.image} alt="" /><small><b>{home.district}</b>{home.kind}</small>{heroIndex === index && <i key={heroListing.id} className="hero-auto-progress" aria-hidden="true" />}</button>)}</div>
+        <div className="hero-selector" aria-label="Önerilen ilanlar">{heroListings.map((home, index) => <button type="button" className={heroIndex === index ? "active" : ""} key={home.id} onClick={() => showHero(index)} aria-label={`${home.title} ilanını göster`}><span>0{index + 1}</span><img src={home.image} alt="" /><small><b>{home.district}</b>{home.kind}</small>{heroIndex === index && <i key={`progress-${heroListing.id}`} className="hero-auto-progress" aria-hidden="true" />}</button>)}</div>
         <form className="mira-search" onSubmit={submitSearch}><div className="search-title"><span>YERİNİ BUL</span><small>24.800+ doğrulanmış ilan</small></div><div className="mira-search-tabs" role="group" aria-label="İlan türü">{(["Satılık", "Kiralık"] as const).map((item) => <button type="button" className={intent === item ? "active" : ""} onClick={() => setIntent(item)} key={item}>{item}</button>)}</div><label><span>Konum</span><select value={city} onChange={(event) => setCity(event.target.value)}><option value="Tümü">Tüm Türkiye</option><option>İstanbul</option><option>İzmir</option><option>Ankara</option><option>Bursa</option></select></label><label><span>Mülk türü</span><select value={kind} onChange={(event) => setKind(event.target.value)}><option>Tümü</option><option>Konut</option><option>Villa</option><option>Arsa</option><option>İş yeri</option></select></label><button className="mira-search-button" type="submit"><span>{filteredListings.length} eşleşme hazır</span><b>Göster <i>↗</i></b></button></form>
       </section>
 
