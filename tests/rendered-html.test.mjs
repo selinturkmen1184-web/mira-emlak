@@ -13,22 +13,22 @@ async function render() {
   );
 }
 
-test("Mira Emlak ana sayfasını sunucu tarafında oluşturur", async () => {
+test("RealYerin ana sayfasını sunucu tarafında oluşturur", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
   assert.match(html, /<html[^>]*lang="tr"/i);
-  assert.match(html, /<title>MIRA \| Seçkin Gayrimenkul &amp; Yatırım<\/title>/i);
-  assert.match(html, /MIRA seçkisi/);
-  assert.match(html, /Daha fazla ilan değil/);
-  assert.match(html, /EDİTÖRÜN SEÇİMİ/);
-  assert.match(html, /Bir adres seçmiyoruz/);
+  assert.match(html, /<title>RealYerin \| Türkiye(?:&#x27;|&#39;|')nin Emlak Platformu<\/title>/i);
+  assert.match(html, /REALYERİN/);
+  assert.match(html, /HAFTANIN ÖNERİLEN İLANI/);
+  assert.match(html, /HIZLI KEŞİF/);
+  assert.match(html, /NEDEN REALYERİN/);
   assert.match(html, /Boğaz manzaralı, teraslı daire/);
-  assert.match(html, /ilk 12 ay/);
+  assert.match(html, /İlk yıl herkes için/);
   assert.match(html, /mira-cinematic\.mp4/);
-  assert.match(html, /https:\/\/mira-emlak\.pages\.dev\/og-v6\.jpg/);
+  assert.match(html, /https:\/\/mira-emlak\.pages\.dev\/og\.png/);
   assert.doesNotMatch(html, /codex-preview|SkeletonPreview|Your site is taking shape/i);
 });
 
@@ -41,5 +41,5 @@ test("temel erişilebilirlik ve iletişim öğelerini içerir", async () => {
   assert.match(html, /mira-tr\.vtt/);
   assert.match(html, /İşaret dili/);
   assert.match(html, /type="tel"/);
-  assert.match(html, /mailto:danisman@miraemlak\.com/);
+  assert.match(html, /mailto:merhaba@realyerin\.com/);
 });
