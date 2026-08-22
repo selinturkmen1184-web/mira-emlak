@@ -43,6 +43,12 @@ const services = [
   ["03", "Doğrudan iletişim", "İlan sahibi veya profesyonel danışmanla hızlı ve şeffaf iletişim."],
 ];
 
+const money = new Intl.NumberFormat("tr-TR", { maximumFractionDigits: 0 });
+
+function listingPriceValue(price: string) {
+  return Number(price.replace(/[^0-9]/g, ""));
+}
+
 export default function Home() {
   const [intent, setIntent] = useState<"Satılık" | "Kiralık">("Satılık");
   const [city, setCity] = useState("Tümü");
@@ -59,6 +65,13 @@ export default function Home() {
   const [introVisible, setIntroVisible] = useState(true);
   const [motionPaused, setMotionPaused] = useState(false);
   const [lifestyle, setLifestyle] = useState("Denize yakın");
+  const [compareIds, setCompareIds] = useState<number[]>([]);
+  const [compareOpen, setCompareOpen] = useState(false);
+  const [budget, setBudget] = useState(20000000);
+  const [downPayment, setDownPayment] = useState(35);
+  const [term, setTerm] = useState(120);
+  const [monthlyRate, setMonthlyRate] = useState(3);
+  const [alertSent, setAlertSent] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
   const filmRef = useRef<HTMLVideoElement>(null);
   const heroTimer = useRef<number | null>(null);
@@ -69,9 +82,19 @@ export default function Home() {
   const copy = translations[language];
   const assetBase = typeof window !== "undefined" && window.location.pathname.startsWith("/mira-emlak") ? "/mira-emlak" : "";
   const filteredListings = useMemo(() => listings.filter((item) => item.intent === intent && (city === "Tümü" || item.city === city) && (kind === "Tümü" || item.kind === kind)), [intent, city, kind]);
+  const compareListings = listings.filter((item) => compareIds.includes(item.id));
+  const loanAmount = budget * (1 - downPayment / 100);
+  const rate = monthlyRate / 100;
+  const monthlyPayment = Math.round(loanAmount * rate * Math.pow(1 + rate, term) / (Math.pow(1 + rate, term) - 1));
+  const budgetMatches = listings.filter((item) => item.intent === "Satılık" && listingPriceValue(item.price) <= budget).length;
 
   useEffect(() => {
-    function closeModal(event: KeyboardEvent) { if (event.key === "Escape") setSelected(null); }
+    function closeModal(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setSelected(null);
+        setCompareOpen(false);
+      }
+    }
     window.addEventListener("keydown", closeModal);
     return () => window.removeEventListener("keydown", closeModal);
   }, []);
@@ -232,7 +255,7 @@ export default function Home() {
     try { await filmRef.current.play(); } catch { setFilmPlaying(false); }
   }
 
-  function openFilmFullscreen() {
+function openFilmFullscreen() {
     const video = filmRef.current as (HTMLVideoElement & { webkitEnterFullscreen?: () => void }) | null;
     if (!video) return;
     if (video.requestFullscreen) void video.requestFullscreen();
@@ -252,6 +275,10 @@ export default function Home() {
     const note = String(data.get("note") || "");
     setContactSent(true);
     window.location.href = `mailto:merhaba@realyerin.com?subject=${encodeURIComponent(`Yeni RealYerin talebi — ${name}`)}&body=${encodeURIComponent(`Ad Soyad: ${name}\nTelefon: ${phone}\n\nTalep: ${note}`)}`;
+  }
+
+  function toggleCompare(id: number) {
+    setCompareIds((items) => items.includes(id) ? items.filter((item) => item !== id) : items.length < 3 ? [...items, id] : [...items.slice(1), id]);
   }
 
   return (
@@ -319,36 +346,53 @@ export default function Home() {
 
       <section className="ry-listings" id="portfoy" data-reveal="up">
         <header className="ry-section-head"><div><span className="section-kicker">03 / SANA GÖRE SEÇTİK</span><h2>Yeni, doğrulanmış<br /><em>ve dikkat çeken ilanlar.</em></h2></div><div className="ry-filter">{(["Satılık", "Kiralık"] as const).map((item) => <button type="button" className={intent === item ? "active" : ""} onClick={() => setIntent(item)} key={item}>{item}</button>)}<button type="button" onClick={() => { setCity("Tümü"); setKind("Tümü"); }}>Tümü</button></div></header>
-        {filteredListings.length ? <div className="ry-listing-grid">{filteredListings.map((home, index) => <article className={index === 0 ? "ry-card featured" : "ry-card"} key={home.id} data-tilt onPointerMove={tiltCard} onPointerLeave={resetCard}><div className="ry-card-image"><img src={home.image} alt={home.title} loading="lazy" /><span className="ry-card-badge">{index === 0 ? "HAFTANIN İLANI" : home.intent.toUpperCase()}</span><button type="button" className={favorites.includes(home.id) ? "ry-fav saved" : "ry-fav"} aria-label={`${home.title} favori`} onClick={() => setFavorites((items) => items.includes(home.id) ? items.filter((id) => id !== home.id) : [...items, home.id])}>{favorites.includes(home.id) ? "♥" : "♡"}</button><small>RY-{String(home.id).padStart(5, "0")}</small></div><div className="ry-card-copy"><span>{home.district}, {home.city}</span><h3>{home.title}</h3><ul><li>{home.rooms}</li><li>{home.area}</li><li>{home.floor}</li></ul><footer><strong>{home.price}</strong><button type="button" onClick={() => setSelected(home)}>Detaylar →</button></footer></div><span className="card-light" aria-hidden="true" /></article>)}</div> : <div className="mira-empty"><h3>Bu seçimlere uygun ilan bulunamadı.</h3><button type="button" onClick={() => { setCity("Tümü"); setKind("Tümü"); }}>Tüm ilanları göster</button></div>}
+        {filteredListings.length ? <div className="ry-listing-grid">{filteredListings.map((home, index) => <article className={index === 0 ? "ry-card featured" : "ry-card"} key={home.id} data-tilt onPointerMove={tiltCard} onPointerLeave={resetCard}><div className="ry-card-image"><img src={home.image} alt={home.title} loading="lazy" /><span className="ry-card-badge">{index === 0 ? "HAFTANIN İLANI" : home.intent.toUpperCase()}</span><button type="button" className={favorites.includes(home.id) ? "ry-fav saved" : "ry-fav"} aria-label={`${home.title} favori`} onClick={() => setFavorites((items) => items.includes(home.id) ? items.filter((id) => id !== home.id) : [...items, home.id])}>{favorites.includes(home.id) ? "♥" : "♡"}</button><small>RY-{String(home.id).padStart(5, "0")}</small></div><div className="ry-card-copy"><span>{home.district}, {home.city}</span><h3>{home.title}</h3><ul><li>{home.rooms}</li><li>{home.area}</li><li>{home.floor}</li></ul><footer><strong>{home.price}</strong><div className="ry-card-actions"><button type="button" className={compareIds.includes(home.id) ? "is-added" : ""} aria-pressed={compareIds.includes(home.id)} onClick={() => toggleCompare(home.id)}>{compareIds.includes(home.id) ? "Eklendi ✓" : "Karşılaştır +"}</button><button type="button" onClick={() => setSelected(home)}>Detaylar →</button></div></footer></div><span className="card-light" aria-hidden="true" /></article>)}</div> : <div className="mira-empty"><h3>Bu seçimlere uygun ilan bulunamadı.</h3><button type="button" onClick={() => { setCity("Tümü"); setKind("Tümü"); }}>Tüm ilanları göster</button></div>}
+      </section>
+
+      <section className="ry-finance" id="butce" data-reveal="split" aria-labelledby="finance-title">
+        <div className="ry-finance-copy"><span className="section-kicker">04 / BÜTÇE STÜDYOSU</span><h2 id="finance-title">Rakamları değil.<br /><em>İhtimalini gör.</em></h2><p>Bütçeni, peşinatını ve vadeni değiştir. RealYerin sana örnek ödeme planını ve bu bütçedeki seçkiyi anında göstersin.</p><div className="ry-finance-note"><span>i</span><p>Bu araç yalnızca örnek hesaplama sunar; banka teklifi veya finansal danışmanlık değildir.</p></div></div>
+        <div className="ry-finance-studio">
+          <div className="ry-finance-controls">
+            <label><span><b>Ev bütçesi</b><strong>{money.format(budget)} TL</strong></span><input type="range" min="3000000" max="30000000" step="250000" value={budget} onChange={(event) => setBudget(Number(event.target.value))} aria-label="Ev bütçesi" /></label>
+            <label><span><b>Peşinat</b><strong>%{downPayment}</strong></span><input type="range" min="10" max="70" step="5" value={downPayment} onChange={(event) => setDownPayment(Number(event.target.value))} aria-label="Peşinat yüzdesi" /></label>
+            <label><span><b>Örnek aylık oran</b><strong>%{monthlyRate.toFixed(2)}</strong></span><input type="range" min="1" max="6" step="0.05" value={monthlyRate} onChange={(event) => setMonthlyRate(Number(event.target.value))} aria-label="Örnek aylık oran" /></label>
+            <fieldset><legend>Vade</legend><div>{[60, 120, 180].map((month) => <button type="button" key={month} className={term === month ? "active" : ""} onClick={() => setTerm(month)}>{month} ay</button>)}</div></fieldset>
+          </div>
+          <aside className="ry-finance-result"><small>TAHMİNİ AYLIK ÖDEME</small><strong>{money.format(monthlyPayment)}<span> TL</span></strong><div><span><b>{money.format(loanAmount)} TL</b><small>ÖRNEK FİNANSMAN</small></span><span><b>{budgetMatches}</b><small>SEÇKİDE UYGUN İLAN</small></span></div><button type="button" onClick={() => document.getElementById("portfoy")?.scrollIntoView({ behavior: "smooth" })}>Bütçeme uygun yerleri gör <i>↗</i></button></aside>
+          <form className="ry-alert" onSubmit={(event) => { event.preventDefault(); setAlertSent(true); }}><div><span>FIRSAT ALARMI</span><p>Bütçene uyan yeni bir ilan geldiğinde haber verelim.</p></div><label><span className="sr-only">E-posta adresi</span><input type="email" placeholder="e-posta adresiniz" required /><button type="submit">Alarm kur →</button></label>{alertSent && <small role="status">Alarmın hazır. Bu demo sürümünde bildirim kaydı örnek olarak gösterilir.</small>}</form>
+        </div>
       </section>
 
       <section className={`ry-map map-focus-${city.toLocaleLowerCase("tr-TR")}`} id="bolgeler" data-reveal="split">
         <div className="ry-map-canvas"><div className="map-coast coast-one" aria-hidden="true" /><div className="map-coast coast-two" aria-hidden="true" /><div className="map-road road-one" aria-hidden="true" /><div className="map-road road-two" aria-hidden="true" />{[["İstanbul", "18.240", "pin-one"], ["İzmir", "3.180", "pin-two"], ["Ankara", "2.760", "pin-three"]].map(([name, count, pin]) => <button type="button" key={name} className={`map-pin ${pin} ${city === name ? "active" : ""}`} onClick={() => setCity(name)} aria-label={`${name} ilanlarını haritada göster`}><i>{count}</i></button>)}<b>REALYERİN<br />CANLI BÖLGE HARİTASI</b><small>{city === "İzmir" ? "38.4237° N\n27.1428° E" : city === "Ankara" ? "39.9334° N\n32.8597° E" : "41.0082° N\n28.9784° E"}</small><span className="map-scan" aria-hidden="true" /></div>
-        <div className="ry-map-copy"><span className="section-kicker">04 / BÖLGEYİ HİSSET</span><h2>Evden önce<br /><em>çevresini keşfet.</em></h2><p>İlanlara yalnızca oda sayısıyla değil; yaşam ritmi, ulaşım, sahile yakınlık ve yatırım hareketiyle bak.</p><div className="ry-city-list">{[["İstanbul", "18.240 ilan", "+%12"], ["İzmir", "4.620 ilan", "+%18"], ["Ankara", "3.980 ilan", "+%09"]].map(([name, count, trend], index) => <button type="button" className={city === name ? "active" : ""} key={name} onClick={() => setCity(name)}><span>0{index + 1}</span><strong>{name}<small>{count}</small></strong><b>{trend}<small>SON 30 GÜN</small></b><i>↗</i></button>)}</div><button className="ry-map-results" type="button" onClick={() => document.getElementById("portfoy")?.scrollIntoView({ behavior: "smooth" })}>{city === "Tümü" ? "Tüm bölge ilanlarını gör" : `${city} ilanlarını gör`} <span>→</span></button></div>
+        <div className="ry-map-copy"><span className="section-kicker">05 / BÖLGEYİ HİSSET</span><h2>Evden önce<br /><em>çevresini keşfet.</em></h2><p>İlanlara yalnızca oda sayısıyla değil; yaşam ritmi, ulaşım, sahile yakınlık ve yatırım hareketiyle bak.</p><div className="ry-city-list">{[["İstanbul", "18.240 ilan", "+%12"], ["İzmir", "4.620 ilan", "+%18"], ["Ankara", "3.980 ilan", "+%09"]].map(([name, count, trend], index) => <button type="button" className={city === name ? "active" : ""} key={name} onClick={() => setCity(name)}><span>0{index + 1}</span><strong>{name}<small>{count}</small></strong><b>{trend}<small>SON 30 GÜN</small></b><i>↗</i></button>)}</div><button className="ry-map-results" type="button" onClick={() => document.getElementById("portfoy")?.scrollIntoView({ behavior: "smooth" })}>{city === "Tümü" ? "Tüm bölge ilanlarını gör" : `${city} ilanlarını gör`} <span>→</span></button></div>
       </section>
 
       <section className="ry-confidence" id="hizmetler" data-reveal="split">
-        <div className="ry-confidence-copy"><span className="section-kicker">05 / NEDEN REALYERİN?</span><h2>İlan çok olabilir.<br /><em>Güven bir tanedir.</em></h2><p>Sahte ilanı, eksik bilgiyi ve zaman kaybını azaltmak için ilanları yayın öncesinde kontrol ediyor; arayanla ilan vereni doğrudan buluşturuyoruz.</p><a href="#uyelik">Platformu keşfet <span>↗</span></a></div>
+        <div className="ry-confidence-copy"><span className="section-kicker">06 / NEDEN REALYERİN?</span><h2>İlan çok olabilir.<br /><em>Güven bir tanedir.</em></h2><p>Sahte ilanı, eksik bilgiyi ve zaman kaybını azaltmak için ilanları yayın öncesinde kontrol ediyor; arayanla ilan vereni doğrudan buluşturuyoruz.</p><a href="#uyelik">Platformu keşfet <span>↗</span></a></div>
         <div className="ry-confidence-list">{services.map(([number, title, description]) => <article key={number}><span>{number}</span><div><h3>{title}</h3><p>{description}</p></div><b>✓</b></article>)}</div>
       </section>
 
-      <section className={`mira-film ry-film ${filmPlaying ? "is-playing" : ""}`} id="tanitim" data-reveal="cinema"><div className="film-heading"><span className="section-kicker">06 / {copy.filmLabel}</span><h2>{copy.filmTitle}</h2><p>{copy.filmBody}</p><div className="film-index"><span>01</span><i /><small>00:11</small></div></div><div className="film-stage"><video ref={filmRef} controls playsInline preload="metadata" poster={listings[0].image} aria-label="RealYerin sinematik tanıtım filmi" onPlay={() => setFilmPlaying(true)} onPause={() => setFilmPlaying(false)} onEnded={() => setFilmPlaying(false)}><source src={`${assetBase}/mira-cinematic.mp4`} type="video/mp4" /><track kind="captions" src={`${assetBase}/subtitles/mira-tr.vtt`} srcLang="tr" label="Türkçe" default /><track kind="captions" src={`${assetBase}/subtitles/mira-en.vtt`} srcLang="en" label="English" /><track kind="captions" src={`${assetBase}/subtitles/mira-de.vtt`} srcLang="de" label="Deutsch" /><track kind="captions" src={`${assetBase}/subtitles/mira-ar.vtt`} srcLang="ar" label="العربية" /></video><button className="film-curtain" type="button" onClick={startFilm} aria-label="RealYerin tanıtım filmini oynat"><span><i>▶</i><b>FİLMİ OYNAT</b><small>SESİ AÇIK İZLEYİN</small></span></button><div className="film-strip" aria-hidden="true">{Array.from({ length: 9 }, (_, index) => <i key={index} />)}</div><span className="film-stamp">REALYERİN / ORİJİNAL</span>{signLanguage && <aside className="mira-sign" aria-label={copy.signTitle}><div className="sign-figure" aria-hidden="true"><span /><i /></div><strong>{copy.signTitle}</strong><p>{copy.signBody}</p></aside>}<div className="film-controls"><label>{copy.captions}<select value={language} onChange={(event) => setLanguage(event.target.value as Language)}><option>TR</option><option>EN</option><option>DE</option><option>AR</option></select></label><button type="button" className={signLanguage ? "active" : ""} onClick={() => setSignLanguage((value) => !value)}>{copy.sign}<b>{signLanguage ? "AÇIK" : "KAPALI"}</b></button><button type="button" onClick={openFilmFullscreen} aria-label="Tam ekran izle">Tam ekran <b>⛶</b></button></div></div></section>
+      <section className={`mira-film ry-film ${filmPlaying ? "is-playing" : ""}`} id="tanitim" data-reveal="cinema"><div className="film-heading"><span className="section-kicker">07 / {copy.filmLabel}</span><h2>{copy.filmTitle}</h2><p>{copy.filmBody}</p><div className="film-index"><span>01</span><i /><small>00:11</small></div></div><div className="film-stage"><video ref={filmRef} controls playsInline preload="metadata" poster={listings[0].image} aria-label="RealYerin sinematik tanıtım filmi" onPlay={() => setFilmPlaying(true)} onPause={() => setFilmPlaying(false)} onEnded={() => setFilmPlaying(false)}><source src={`${assetBase}/mira-cinematic.mp4`} type="video/mp4" /><track kind="captions" src={`${assetBase}/subtitles/mira-tr.vtt`} srcLang="tr" label="Türkçe" default /><track kind="captions" src={`${assetBase}/subtitles/mira-en.vtt`} srcLang="en" label="English" /><track kind="captions" src={`${assetBase}/subtitles/mira-de.vtt`} srcLang="de" label="Deutsch" /><track kind="captions" src={`${assetBase}/subtitles/mira-ar.vtt`} srcLang="ar" label="العربية" /></video><button className="film-curtain" type="button" onClick={startFilm} aria-label="RealYerin tanıtım filmini oynat"><span><i>▶</i><b>FİLMİ OYNAT</b><small>SESİ AÇIK İZLEYİN</small></span></button><div className="film-strip" aria-hidden="true">{Array.from({ length: 9 }, (_, index) => <i key={index} />)}</div><span className="film-stamp">REALYERİN / ORİJİNAL</span>{signLanguage && <aside className="mira-sign" aria-label={copy.signTitle}><div className="sign-figure" aria-hidden="true"><span /><i /></div><strong>{copy.signTitle}</strong><p>{copy.signBody}</p></aside>}<div className="film-controls"><label>{copy.captions}<select value={language} onChange={(event) => setLanguage(event.target.value as Language)}><option>TR</option><option>EN</option><option>DE</option><option>AR</option></select></label><button type="button" className={signLanguage ? "active" : ""} onClick={() => setSignLanguage((value) => !value)}>{copy.sign}<b>{signLanguage ? "AÇIK" : "KAPALI"}</b></button><button type="button" onClick={openFilmFullscreen} aria-label="Tam ekran izle">Tam ekran <b>⛶</b></button></div></div></section>
 
       <section className="ry-membership" id="uyelik" data-reveal="up">
-        <header><span className="section-kicker">07 / REALYERİN ÜYELİK</span><h2>İlk yıl herkes için<br /><em>tamamen ücretsiz.</em></h2><p>İster evini arıyor ol, ister ilan veriyor, ister portföy yönetiyor ol. Sana uygun kanal hazır.</p></header>
+        <header><span className="section-kicker">08 / REALYERİN ÜYELİK</span><h2>İlk yıl herkes için<br /><em>tamamen ücretsiz.</em></h2><p>İster evini arıyor ol, ister ilan veriyor, ister portföy yönetiyor ol. Sana uygun kanal hazır.</p></header>
         <div className="ry-plans">{[["01", "Bireysel", "Favoriler, kayıtlı aramalar ve yeni ilan bildirimleri", "Ücretsiz"], ["02", "İlan sahibi", "İlan yayınlama, mesaj yönetimi ve performans özeti", "Ücretsiz"], ["03", "Profesyonel", "Kurumsal vitrin, portföy yönetimi ve ekip araçları", "Ücretsiz"]].map(([number, title, description, price]) => <article key={title}><span>{number}</span><h3>{title}</h3><p>{description}</p><div><strong>{price}</strong><small>/ ilk 12 ay</small></div><a href="#iletisim">Ön kayıt oluştur <b>↗</b></a></article>)}</div>
       </section>
 
       <section className="ry-owner" id="iletisim" data-reveal="split">
-        <div><span className="section-kicker">08 / SENİN YERİN</span><h2>Bir mülkün mü var?<br /><em>Doğru kişiye göster.</em></h2><p>Bilgilerini bırak; RealYerin ekibi ilanını hazırlamak veya aradığın mülkü bulmak için seninle iletişime geçsin.</p><a href="tel:+905550000000">+90 555 000 00 00</a><a href="mailto:merhaba@realyerin.com">merhaba@realyerin.com</a></div>
+        <div><span className="section-kicker">09 / SENİN YERİN</span><h2>Bir mülkün mü var?<br /><em>Doğru kişiye göster.</em></h2><p>Bilgilerini bırak; RealYerin ekibi ilanını hazırlamak veya aradığın mülkü bulmak için seninle iletişime geçsin.</p><a href="tel:+905550000000">+90 555 000 00 00</a><a href="mailto:merhaba@realyerin.com">merhaba@realyerin.com</a></div>
         <form className="ry-owner-form" onSubmit={submitContact}><div><label><span>Adınız soyadınız</span><input name="name" type="text" placeholder="Ad Soyad" required /></label><label><span>Telefon</span><input name="phone" type="tel" placeholder="05__ ___ __ __" required /></label></div><label><span>Talebiniz</span><textarea name="note" rows={4} placeholder="İlan vermek veya bir mülk bulmak istiyorum..." required /></label><button type="submit">Beni arayın <span>→</span></button>{contactSent && <p role="status">E-posta uygulamanız açılıyor. Mesajı göndererek talebinizi tamamlayabilirsiniz.</p>}</form>
       </section>
 
       <footer className="ry-footer"><div className="ry-footer-top"><a className="mira-brand footer" href="#anasayfa"><span className="mira-monogram">R</span><span className="mira-wordmark">REALYERİN<small>TÜRKİYE'NİN EMLAK PLATFORMU</small></span></a><p>Aradığın yer.<br /><b>Gerçekten yerinde.</b></p></div><div className="ry-footer-links"><span>© 2026 RealYerin. Tüm hakları saklıdır.</span><nav><a href="#portfoy">Satılık</a><a href="#portfoy">Kiralık</a><a href="#uyelik">Üyelik</a><a href="#iletisim">İletişim</a></nav></div></footer>
 
+      {compareIds.length > 0 && <aside className="ry-compare-tray" aria-label="Karşılaştırma sepeti"><div className="ry-compare-thumbs">{compareListings.map((home) => <button type="button" key={home.id} onClick={() => toggleCompare(home.id)} aria-label={`${home.title} karşılaştırmadan çıkar`}><img src={home.image} alt="" /><span>×</span></button>)}{Array.from({ length: 3 - compareIds.length }, (_, index) => <i key={index}>+</i>)}</div><p><b>{compareIds.length}/3 yer seçildi</b><small>{compareIds.length < 2 ? "Karşılaştırmak için bir yer daha seç" : "Farkı tek ekranda gör"}</small></p><button type="button" disabled={compareIds.length < 2} onClick={() => setCompareOpen(true)}>Karşılaştır <span>↗</span></button><button className="ry-compare-clear" type="button" aria-label="Karşılaştırmayı temizle" onClick={() => setCompareIds([])}>×</button></aside>}
+
       <nav className="ry-mobile-dock" aria-label="Mobil hızlı menü"><a href="#anasayfa"><i>⌂</i><span>Ana sayfa</span></a><a href="#portfoy"><i>⌕</i><span>İlan ara</span></a><button type="button" onClick={() => document.getElementById("portfoy")?.scrollIntoView({ behavior: "smooth" })}><i>♡</i><span>Favoriler</span></button><a className="primary" href="#uyelik"><i>＋</i><span>İlan ver</span></a></nav>
 
       {selected && <div className="mira-modal-backdrop" role="presentation" onMouseDown={() => setSelected(null)}><section className="mira-modal" role="dialog" aria-modal="true" aria-labelledby="mira-modal-title" onMouseDown={(event) => event.stopPropagation()}><button className="modal-close" type="button" aria-label="Kapat" onClick={() => setSelected(null)}>×</button><div className="modal-image"><img src={selected.image} alt={selected.title} /><span>{selected.intent}</span></div><div className="modal-content"><small>{selected.district} / {selected.city}</small><h2 id="mira-modal-title">{selected.title}</h2><p>{selected.description}</p><ul><li><span>Oda</span><strong>{selected.rooms}</strong></li><li><span>Alan</span><strong>{selected.area}</strong></li><li><span>Detay</span><strong>{selected.floor}</strong></li></ul><footer><strong>{selected.price}</strong><a href="#iletisim" onClick={() => setSelected(null)}>Bilgi alın ↗</a></footer></div></section></div>}
+      {compareOpen && <div className="mira-modal-backdrop" role="presentation" onMouseDown={() => setCompareOpen(false)}><section className="ry-compare-modal" role="dialog" aria-modal="true" aria-labelledby="compare-title" onMouseDown={(event) => event.stopPropagation()}><header><div><span className="section-kicker">AKILLI KARŞILAŞTIRMA</span><h2 id="compare-title">Yan yana.<br /><em>Karar vermeye hazır.</em></h2></div><button type="button" aria-label="Karşılaştırmayı kapat" onClick={() => setCompareOpen(false)}>×</button></header><div className="ry-compare-grid">{compareListings.map((home, index) => <article key={home.id}><div className="ry-compare-image"><img src={home.image} alt={home.title} /><span>0{index + 1}</span></div><small>{home.district} / {home.city}</small><h3>{home.title}</h3><strong>{home.price}</strong><dl><div><dt>Tip</dt><dd>{home.kind}</dd></div><div><dt>Oda</dt><dd>{home.rooms}</dd></div><div><dt>Alan</dt><dd>{home.area}</dd></div><div><dt>Konum</dt><dd>{home.floor}</dd></div><div><dt>Doğrulama</dt><dd>RealYerin ✓</dd></div></dl><button type="button" onClick={() => { setCompareOpen(false); setSelected(home); }}>İlanı incele <span>↗</span></button></article>)}</div></section></div>}
     </main>
   );
 }
