@@ -23,12 +23,15 @@ test("RealYerin ana sayfasını sunucu tarafında oluşturur", async () => {
   assert.match(html, /<title>RealYerin \| Türkiye(?:&#x27;|&#39;|')nin Emlak Platformu<\/title>/i);
   assert.match(html, /REALYERİN/);
   assert.match(html, /REALYERİN SEÇKİSİ/);
+  assert.match(html, /hero-auto-progress/);
   assert.match(html, /HIZLI KEŞİF/);
   assert.match(html, /NEDEN REALYERİN/);
   assert.match(html, /CANLI BÖLGE HARİTASI/);
   assert.match(html, /Boğaz manzaralı, teraslı daire/);
   assert.match(html, /İlk yıl herkes için/);
   assert.match(html, /mira-cinematic\.mp4/);
+  assert.match(html, /FİLMİ OYNAT/);
+  assert.match(html, /aria-label="Tam ekran izle"/);
   assert.match(html, /https:\/\/mira-emlak\.pages\.dev\/og\.png/);
   assert.doesNotMatch(html, /codex-preview|SkeletonPreview|Your site is taking shape/i);
 });
