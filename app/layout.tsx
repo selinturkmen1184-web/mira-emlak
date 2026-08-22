@@ -22,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
       ? forwardedProtocol
       : "https";
   const baseUrl = trustedHost ? `${protocol}://${host}` : "https://mira-emlak.pages.dev";
-  const socialImage = `${baseUrl}/og.png`;
+  const socialImage = `${baseUrl}/og-v7.png`;
   const title = "RealYerin | Türkiye'nin Emlak Platformu";
   const description = "Satılık ve kiralık konut, villa, arsa ve iş yeri ilanlarını güvenle keşfet. RealYerin'de üyelik ve ilan vermek ilk 12 ay ücretsiz.";
 
@@ -35,7 +35,7 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
       locale: "tr_TR",
       siteName: "RealYerin",
-      images: [{ url: socialImage, width: 1731, height: 909, alt: "RealYerin — Aradığın yer, gerçekten yerinde" }],
+      images: [{ url: socialImage, width: 1731, height: 909, alt: "RealYerin — Yerini bul" }],
     },
     twitter: {
       card: "summary_large_image",

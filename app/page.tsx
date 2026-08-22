@@ -255,7 +255,7 @@ export default function Home() {
   }
 
   return (
-    <main ref={mainRef} className={`mira-site market-v9 market-v10 ${motionPaused ? "motion-paused" : ""}`} dir={language === "AR" ? "rtl" : "ltr"}>
+    <main ref={mainRef} className={`mira-site market-v9 market-v10 market-v11 ${motionPaused ? "motion-paused" : ""}`} dir={language === "AR" ? "rtl" : "ltr"}>
       <div className={`ry-opening ${introVisible ? "is-active" : "is-finished"}`} aria-hidden={!introVisible}>
         <div className="opening-coordinates"><span>41° 02′ N</span><i /><span>29° 00′ E</span></div>
         <div className="opening-mark"><span>REAL</span><span>YERİN</span></div>

@@ -37,7 +37,7 @@ test("RealYerin ana sayfasını sunucu tarafında oluşturur", async () => {
   assert.match(html, /mira-cinematic\.mp4/);
   assert.match(html, /FİLMİ OYNAT/);
   assert.match(html, /aria-label="Tam ekran izle"/);
-  assert.match(html, /https:\/\/mira-emlak\.pages\.dev\/og\.png/);
+  assert.match(html, /https:\/\/mira-emlak\.pages\.dev\/og-v7\.png/);
   assert.doesNotMatch(html, /codex-preview|SkeletonPreview|Your site is taking shape/i);
 });
 
