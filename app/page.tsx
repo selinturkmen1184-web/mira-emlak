@@ -43,6 +43,14 @@ const services = [
   ["03", "Doğrudan iletişim", "İlan sahibi veya profesyonel danışmanla hızlı ve şeffaf iletişim."],
 ];
 
+const lifestyleScenes = [
+  { name: "Denize yakın", title: "Sabahın ilk ışığı kıyıdan gelsin.", image: listings[1].image, matches: 286, code: "KIYI / 01", metrics: [["Sahil", "4 dk"], ["Gün ışığı", "9,2"], ["Sosyal yaşam", "8,7"]] },
+  { name: "Bahçeli yaşam", title: "Kapıyı açınca şehir değil, bahçe başlasın.", image: listings[4].image, matches: 174, code: "YEŞİL / 02", metrics: [["Bahçe", "120 m²"], ["Sessizlik", "9,0"], ["Aile yaşamı", "9,4"]] },
+  { name: "Yatırıma uygun", title: "Bugünün adresi, yarının değeri olsun.", image: listings[2].image, matches: 391, code: "DEĞER / 03", metrics: [["Ulaşım", "6 dk"], ["Talep", "Yüksek"], ["Potansiyel", "+%18"]] },
+  { name: "Şehre 20 dakika", title: "Merkeze yakın, kalabalığa mesafeli.", image: listings[3].image, matches: 228, code: "RİTİM / 04", metrics: [["Merkez", "20 dk"], ["Metro", "7 dk"], ["Yaşam", "8,9"]] },
+  { name: "Sessiz ve sakin", title: "Günün sonunda yalnızca huzur duyulsun.", image: listings[5].image, matches: 143, code: "SAKİN / 05", metrics: [["Gürültü", "Düşük"], ["Doğa", "9,5"], ["Yoğunluk", "Az"]] },
+];
+
 const money = new Intl.NumberFormat("tr-TR", { maximumFractionDigits: 0 });
 
 function listingPriceValue(price: string) {
@@ -82,6 +90,7 @@ export default function Home() {
   const copy = translations[language];
   const assetBase = typeof window !== "undefined" && window.location.pathname.startsWith("/mira-emlak") ? "/mira-emlak" : "";
   const filteredListings = useMemo(() => listings.filter((item) => item.intent === intent && (city === "Tümü" || item.city === city) && (kind === "Tümü" || item.kind === kind)), [intent, city, kind]);
+  const lifestyleScene = lifestyleScenes.find((item) => item.name === lifestyle) ?? lifestyleScenes[0];
   const compareListings = listings.filter((item) => compareIds.includes(item.id));
   const loanAmount = budget * (1 - downPayment / 100);
   const rate = monthlyRate / 100;
@@ -339,9 +348,19 @@ function openFilmFullscreen() {
         </div>
       </section>
 
-      <section className="ry-life-search" data-reveal="split" aria-labelledby="life-search-title">
-        <div className="ry-life-copy"><span className="section-kicker">02 / REALYERİN RADAR</span><h2 id="life-search-title">Evi değil.<br /><em>Hayatı tarif et.</em></h2><p>Oda sayısını sonra konuşuruz. Önce nasıl bir sabaha uyanmak, neye yakın olmak ve nasıl yaşamak istediğini seç.</p><small>AKILLI YAŞAM EŞLEŞTİRMESİ / BETA</small></div>
-        <div className="ry-radar-panel"><div className="ry-radar-visual" aria-hidden="true"><i /><i /><i /><span>R</span><b>{lifestyle.toUpperCase()}</b></div><p>Nasıl bir yer arıyorsun?</p><div className="ry-life-options">{["Denize yakın", "Bahçeli yaşam", "Yatırıma uygun", "Şehre 20 dakika", "Sessiz ve sakin"].map((item) => <button type="button" className={lifestyle === item ? "active" : ""} onClick={() => setLifestyle(item)} key={item}>{item}<span>{lifestyle === item ? "●" : "+"}</span></button>)}</div><button className="ry-radar-action" type="button" onClick={() => document.getElementById("portfoy")?.scrollIntoView({ behavior: "smooth" })}><span><small>{lifestyle} için</small><b>286 eşleşme bulundu</b></span><i>↗</i></button></div>
+      <section className="ry-life-search ry-life-stories" data-reveal="split" aria-labelledby="life-search-title">
+        <div className="ry-life-copy"><span className="section-kicker">02 / YAŞAM SENARYOLARI</span><h2 id="life-search-title">Bir ev seçme.<br /><em>Bir sahne seç.</em></h2><p>Metrekareden önce hissi seç. RealYerin, yaşamak istediğin sahneyi anlayıp sana uygun yerleri öne çıkarsın.</p><small>SEÇ · HİSSET · YERİNİ BUL</small></div>
+        <div className="ry-story-panel">
+          <article className="ry-story-stage" key={lifestyleScene.name}>
+            <img src={lifestyleScene.image} alt={lifestyleScene.name} loading="lazy" />
+            <span className="ry-story-code">{lifestyleScene.code}</span>
+            <div className="ry-story-caption"><small>SEÇTİĞİN YAŞAM</small><h3>{lifestyleScene.title}</h3></div>
+            <aside className="ry-story-match"><small>REALYERİN EŞLEŞMESİ</small><strong>{lifestyleScene.matches}</strong><span>yer hazır</span></aside>
+          </article>
+          <div className="ry-story-metrics" aria-label={`${lifestyleScene.name} yaşam bilgileri`}>{lifestyleScene.metrics.map(([label, value]) => <span key={label}><small>{label}</small><b>{value}</b></span>)}</div>
+          <div className="ry-story-picker" role="group" aria-label="Yaşam senaryosu seç">{lifestyleScenes.map((item, index) => <button type="button" className={lifestyle === item.name ? "active" : ""} onClick={() => setLifestyle(item.name)} key={item.name}><span>0{index + 1}</span><img src={item.image} alt="" loading="lazy" /><b>{item.name}</b><i>{lifestyle === item.name ? "●" : "↗"}</i></button>)}</div>
+          <button className="ry-story-action" type="button" onClick={() => document.getElementById("portfoy")?.scrollIntoView({ behavior: "smooth" })}><span><small>{lifestyleScene.name} seçkisi</small><b>{lifestyleScene.matches} yeri keşfet</b></span><i>→</i></button>
+        </div>
       </section>
 
       <section className="ry-listings" id="portfoy" data-reveal="up">

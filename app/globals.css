@@ -1776,3 +1776,80 @@ body.ry-opening-lock { overflow: hidden; }
   .ry-compare-modal h2 { font-size: 12vw; }
   .ry-compare-image { height: 155px; }
 }
+
+/* RealYerin — cinematic life stories v13 */
+.market-v11 .ry-life-stories { grid-template-columns: .63fr 1.37fr; min-height: 880px; background: #ead9ce; }
+.market-v11 .ry-life-stories .ry-life-copy { border: 0; background: #65172b; color: #fff; }
+.market-v11 .ry-life-stories .ry-life-copy .section-kicker { color: #ffd3db; }
+.market-v11 .ry-life-stories .ry-life-copy h2 { color: #fff; }
+.market-v11 .ry-life-stories .ry-life-copy h2 em { -webkit-text-stroke-color: #ffd3db; }
+.market-v11 .ry-life-stories .ry-life-copy > p { color: rgba(255,255,255,.72); }
+.market-v11 .ry-life-stories .ry-life-copy > small { color: #ffd3db; }
+.ry-story-panel { display: grid; grid-template-columns: 1fr auto; grid-template-rows: minmax(480px,1fr) auto auto; gap: 13px; padding: 34px; }
+.ry-story-stage { position: relative; grid-column: 1 / 3; min-height: 500px; overflow: hidden; background: #8f3147; isolation: isolate; animation: storySceneIn .68s cubic-bezier(.2,.72,.2,1) both; }
+.ry-story-stage::after { content: ""; position: absolute; z-index: 1; inset: 0; background: linear-gradient(90deg,rgba(75,17,32,.82),rgba(75,17,32,.08) 56%),linear-gradient(0deg,rgba(75,17,32,.7),transparent 50%); }
+.ry-story-stage::before { content: ""; position: absolute; z-index: 2; top: -15%; right: 18%; width: 1px; height: 135%; background: rgba(255,255,255,.45); transform: rotate(22deg); }
+.ry-story-stage > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: saturate(.88) contrast(1.03) brightness(.92); animation: storyCamera 8s cubic-bezier(.2,.7,.2,1) both; }
+.ry-story-code { position: absolute; z-index: 3; top: 25px; left: 27px; padding: 8px 10px; border: 1px solid rgba(255,255,255,.55); color: #fff; font-family: "SFMono-Regular",Consolas,monospace; font-size: 6px; letter-spacing: .14em; }
+.ry-story-caption { position: absolute; z-index: 3; bottom: 33px; left: 31px; width: min(620px,68%); color: #fff; }
+.ry-story-caption small { color: #ffd4dc; font-family: "SFMono-Regular",Consolas,monospace; font-size: 7px; letter-spacing: .12em; }
+.ry-story-caption h3 { margin: 16px 0 0; font-size: clamp(42px,5vw,79px); font-weight: 740; line-height: .82; letter-spacing: -.07em; text-transform: uppercase; }
+.ry-story-match { position: absolute; z-index: 4; top: 24px; right: 24px; display: flex; flex-direction: column; min-width: 150px; padding: 19px; background: rgba(255,250,243,.94); color: var(--ink); box-shadow: 0 18px 55px rgba(66,17,30,.18); backdrop-filter: blur(14px); }
+.ry-story-match small { color: #876d72; font-family: "SFMono-Regular",Consolas,monospace; font-size: 5px; letter-spacing: .09em; }
+.ry-story-match strong { margin-top: 10px; color: var(--wine); font-size: 52px; line-height: .8; letter-spacing: -.08em; }
+.ry-story-match span { margin-top: 7px; color: #806a6d; font-size: 7px; }
+.ry-story-metrics { grid-column: 1 / 3; display: grid; grid-template-columns: repeat(3,1fr); border: 1px solid rgba(58,23,32,.16); background: var(--ivory); }
+.ry-story-metrics > span { display: flex; justify-content: space-between; align-items: center; min-height: 62px; padding: 0 19px; border-right: 1px solid rgba(58,23,32,.16); }
+.ry-story-metrics > span:last-child { border-right: 0; }
+.ry-story-metrics small { color: #8b7377; font-family: "SFMono-Regular",Consolas,monospace; font-size: 6px; letter-spacing: .08em; text-transform: uppercase; }
+.ry-story-metrics b { color: var(--wine); font-size: 12px; }
+.ry-story-picker { display: grid; grid-template-columns: repeat(5,1fr); gap: 6px; }
+.ry-story-picker button { position: relative; min-width: 0; height: 94px; padding: 0; overflow: hidden; border: 1px solid rgba(58,23,32,.18); background: #7a293d; color: #fff; text-align: left; }
+.ry-story-picker button::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg,rgba(70,15,29,.85),rgba(70,15,29,.08)); }
+.ry-story-picker button.active { border-color: var(--wine); box-shadow: inset 0 0 0 2px var(--wine); }
+.ry-story-picker img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.7) brightness(.73); }
+.ry-story-picker button.active img { filter: saturate(1) brightness(.88); }
+.ry-story-picker span,.ry-story-picker b,.ry-story-picker i { position: absolute; z-index: 2; }
+.ry-story-picker span { top: 9px; left: 10px; color: rgba(255,255,255,.65); font-family: "SFMono-Regular",Consolas,monospace; font-size: 6px; }
+.ry-story-picker b { right: 20px; bottom: 11px; left: 10px; overflow: hidden; font-size: 7px; text-overflow: ellipsis; white-space: nowrap; }
+.ry-story-picker i { right: 9px; bottom: 9px; color: #ffd2da; font-size: 9px; font-style: normal; }
+.ry-story-action { display: flex; justify-content: space-between; align-items: center; min-width: 220px; padding: 0 20px; border: 0; background: var(--wine); color: #fff; text-align: left; }
+.ry-story-action > span { display: flex; flex-direction: column; gap: 4px; }
+.ry-story-action small { color: rgba(255,255,255,.65); font-family: "SFMono-Regular",Consolas,monospace; font-size: 5px; letter-spacing: .08em; text-transform: uppercase; }
+.ry-story-action b { font-size: 9px; }
+.ry-story-action > i { font-size: 23px; font-style: normal; }
+
+@keyframes storySceneIn { from { opacity: 0; clip-path: inset(0 18% 0 0); } to { opacity: 1; clip-path: inset(0); } }
+@keyframes storyCamera { from { transform: scale(1.06); } to { transform: scale(1.01); } }
+
+@media (max-width: 1120px) {
+  .market-v11 .ry-life-stories { grid-template-columns: 1fr; }
+  .ry-story-panel { min-height: 760px; }
+}
+
+@media (max-width: 820px) {
+  .ry-story-panel { display: block; min-height: 0; padding: 14px 14px 70px; }
+  .ry-story-stage { min-height: 470px; }
+  .ry-story-caption { right: 20px; bottom: 25px; left: 20px; width: auto; }
+  .ry-story-caption h3 { font-size: clamp(42px,11vw,67px); }
+  .ry-story-match { top: 14px; right: 14px; min-width: 124px; padding: 15px; }
+  .ry-story-match strong { font-size: 42px; }
+  .ry-story-metrics { margin-top: 8px; }
+  .ry-story-picker { grid-template-columns: repeat(2,1fr); margin-top: 8px; }
+  .ry-story-picker button { height: 86px; }
+  .ry-story-picker button:last-child { grid-column: 1 / 3; }
+  .ry-story-action { width: 100%; min-height: 64px; margin-top: 8px; }
+}
+
+@media (max-width: 520px) {
+  .market-v11 .ry-life-stories .ry-life-copy { padding-bottom: 60px; }
+  .ry-story-stage { min-height: 420px; }
+  .ry-story-stage::before { right: 28%; }
+  .ry-story-code { top: 15px; left: 15px; }
+  .ry-story-caption h3 { font-size: 11vw; }
+  .ry-story-match { top: 14px; right: 14px; min-width: 106px; }
+  .ry-story-match small { max-width: 80px; }
+  .ry-story-match strong { font-size: 36px; }
+  .ry-story-metrics > span { flex-direction: column; justify-content: center; gap: 6px; min-height: 70px; padding: 0 7px; text-align: center; }
+  .ry-story-picker button { height: 78px; }
+}

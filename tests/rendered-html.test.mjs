@@ -28,8 +28,9 @@ test("RealYerin ana sayfasını sunucu tarafında oluşturur", async () => {
   assert.match(html, /outline-text">BUL\./);
   assert.match(html, /hero-auto-progress/);
   assert.match(html, /HIZLI KEŞİF/);
-  assert.match(html, /REALYERİN RADAR/);
-  assert.match(html, /Hayatı tarif et/);
+  assert.match(html, /YAŞAM SENARYOLARI/);
+  assert.match(html, /Bir sahne seç/);
+  assert.match(html, /REALYERİN EŞLEŞMESİ/);
   assert.match(html, /BÜTÇE STÜDYOSU/);
   assert.match(html, /FIRSAT ALARMI/);
   assert.match(html, /Karşılaştır \+/);
