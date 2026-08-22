@@ -56,9 +56,12 @@ export default function Home() {
   const [contactSent, setContactSent] = useState(false);
   const [heroTransitioning, setHeroTransitioning] = useState(false);
   const [filmPlaying, setFilmPlaying] = useState(false);
+  const [introVisible, setIntroVisible] = useState(true);
   const heroRef = useRef<HTMLElement>(null);
   const filmRef = useRef<HTMLVideoElement>(null);
   const heroTimer = useRef<number | null>(null);
+  const mainRef = useRef<HTMLElement>(null);
+  const cursorRef = useRef<HTMLDivElement>(null);
   const heroListings = listings.filter((item) => item.featured);
   const heroListing = heroListings[heroIndex];
   const copy = translations[language];
@@ -132,6 +135,71 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || window.sessionStorage.getItem("realyerin-opening-seen")) {
+      setIntroVisible(false);
+      return;
+    }
+    document.body.classList.add("ry-opening-lock");
+    const timer = window.setTimeout(closeIntro, 3400);
+    return () => {
+      window.clearTimeout(timer);
+      document.body.classList.remove("ry-opening-lock");
+    };
+  }, []);
+
+  useEffect(() => {
+    const main = mainRef.current;
+    if (!main) return;
+    let frame = 0;
+    const update = () => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        const height = document.documentElement.scrollHeight - window.innerHeight;
+        main.style.setProperty("--page-progress", `${height > 0 ? (window.scrollY / height) * 100 : 0}%`);
+      });
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, []);
+
+  useEffect(() => {
+    const cursor = cursorRef.current;
+    if (!cursor || window.matchMedia("(pointer: coarse)").matches || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let frame = 0;
+    const move = (event: PointerEvent) => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        cursor.style.transform = `translate3d(${event.clientX}px,${event.clientY}px,0)`;
+        cursor.classList.add("is-visible");
+        cursor.classList.toggle("is-active", Boolean((event.target as Element | null)?.closest("a,button,select,input,textarea")));
+      });
+    };
+    const down = () => cursor.classList.add("is-down");
+    const up = () => cursor.classList.remove("is-down");
+    window.addEventListener("pointermove", move, { passive: true });
+    window.addEventListener("pointerdown", down);
+    window.addEventListener("pointerup", up);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerdown", down);
+      window.removeEventListener("pointerup", up);
+    };
+  }, []);
+
+  function closeIntro() {
+    setIntroVisible(false);
+    document.body.classList.remove("ry-opening-lock");
+    window.sessionStorage.setItem("realyerin-opening-seen", "1");
+  }
+
   function showHero(index: number) {
     if (index === heroIndex || heroTransitioning) return;
     if (heroTimer.current) window.clearTimeout(heroTimer.current);
@@ -185,7 +253,17 @@ export default function Home() {
   }
 
   return (
-    <main className="mira-site market-v9" dir={language === "AR" ? "rtl" : "ltr"}>
+    <main ref={mainRef} className="mira-site market-v9" dir={language === "AR" ? "rtl" : "ltr"}>
+      <div className={`ry-opening ${introVisible ? "is-active" : "is-finished"}`} aria-hidden={!introVisible}>
+        <div className="opening-coordinates"><span>41° 02′ N</span><i /><span>29° 00′ E</span></div>
+        <div className="opening-mark"><span>REAL</span><span>YERİN</span></div>
+        <p>Bir ilan değil.<br /><b>Yeni bir hayatın ilk karesi.</b></p>
+        <div className="opening-progress"><i /></div>
+        <small>EMLAKTA YENİ BİR YER / 2026</small>
+        <button type="button" onClick={closeIntro} tabIndex={introVisible ? 0 : -1}>Geç <span>↗</span></button>
+      </div>
+      <div ref={cursorRef} className="ry-cursor" aria-hidden="true"><i /><span /></div>
+      <div className="ry-page-progress" aria-hidden="true"><i /></div>
       <header className="mira-header">
         <a className="mira-brand" href="#anasayfa" aria-label="RealYerin ana sayfa"><span className="mira-monogram">R<span>●</span></span><span className="mira-wordmark">REALYERİN<small>YERİNİ BUL. YERİNDE BUL.</small></span></a>
         <nav className={menuOpen ? "open" : ""} aria-label="Ana menü"><a href="#portfoy" onClick={() => { setIntent("Satılık"); setMenuOpen(false); }}>Satılık</a><a href="#portfoy" onClick={() => { setIntent("Kiralık"); setMenuOpen(false); }}>Kiralık</a><a href="#portfoy" onClick={() => setMenuOpen(false)}>Yeni projeler</a><a href="#tanitim" onClick={() => setMenuOpen(false)}>RealYerin'i tanı</a></nav>
@@ -209,6 +287,8 @@ export default function Home() {
         </div>
         <aside className="hero-proof"><span>RY</span><strong>DOĞRULANDI</strong><small>İlan no. RY-{String(heroListing.id).padStart(5, "0")}</small></aside>
         <div className="hero-selector" aria-label="Önerilen ilanlar">{heroListings.map((home, index) => <button type="button" className={heroIndex === index ? "active" : ""} key={home.id} onClick={() => showHero(index)} aria-label={`${home.title} ilanını göster`}><span>0{index + 1}</span><img src={home.image} alt="" /><small><b>{home.district}</b>{home.kind}</small>{heroIndex === index && <i key={`progress-${heroListing.id}`} className="hero-auto-progress" aria-hidden="true" />}</button>)}</div>
+        <div className="hero-scroll-cue" aria-hidden="true"><span>KEŞFETMEK İÇİN KAYDIR</span><i /></div>
+        <div className="hero-cinema-bars" aria-hidden="true"><span /><span /></div>
         <form className="mira-search" onSubmit={submitSearch}><div className="search-title"><span>YERİNİ BUL</span><small>24.800+ doğrulanmış ilan</small></div><div className="mira-search-tabs" role="group" aria-label="İlan türü">{(["Satılık", "Kiralık"] as const).map((item) => <button type="button" className={intent === item ? "active" : ""} onClick={() => setIntent(item)} key={item}>{item}</button>)}</div><label><span>Konum</span><select value={city} onChange={(event) => setCity(event.target.value)}><option value="Tümü">Tüm Türkiye</option><option>İstanbul</option><option>İzmir</option><option>Ankara</option><option>Bursa</option></select></label><label><span>Mülk türü</span><select value={kind} onChange={(event) => setKind(event.target.value)}><option>Tümü</option><option>Konut</option><option>Villa</option><option>Arsa</option><option>İş yeri</option></select></label><button className="mira-search-button" type="submit"><span>{filteredListings.length} eşleşme hazır</span><b>Göster <i>↗</i></b></button></form>
       </section>
 

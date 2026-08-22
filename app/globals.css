@@ -1061,3 +1061,102 @@ img, video { display: block; max-width: 100%; }
   .market-v9 .hero-photo img { transform: scale(1.04) !important; }
   .market-v9 .hero-grain,.market-v9 .map-scan { display: none; }
 }
+
+/* RealYerin — signature opening and immersive details */
+body.ry-opening-lock { overflow: hidden; }
+.ry-opening {
+  position: fixed;
+  z-index: 9999;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #0c0b0a;
+  color: #fff;
+  isolation: isolate;
+  transition: clip-path 1.05s cubic-bezier(.76,0,.24,1),visibility 0s 1.05s;
+}
+.ry-opening::before {
+  content: "";
+  position: absolute;
+  z-index: -2;
+  inset: -5%;
+  background: linear-gradient(90deg,rgba(12,11,10,.97),rgba(12,11,10,.52),rgba(12,11,10,.88)),url("https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=88") center/cover;
+  filter: saturate(.42) contrast(1.14);
+  animation: openingCamera 4.2s cubic-bezier(.2,.7,.2,1) both;
+}
+.ry-opening::after { content: ""; position: absolute; z-index: -1; inset: 24px; border: 1px solid rgba(255,255,255,.14); }
+.ry-opening.is-finished { visibility: hidden; clip-path: inset(0 0 100% 0); pointer-events: none; }
+.opening-coordinates { position: absolute; top: 43px; left: 50%; display: flex; align-items: center; gap: 16px; color: rgba(255,255,255,.46); font-size: 7px; letter-spacing: 2px; transform: translateX(-50%); }
+.opening-coordinates i { width: 54px; height: 1px; background: rgba(255,255,255,.25); }
+.opening-mark { display: flex; align-items: center; margin-top: -40px; font-family: "Manrope",Arial,sans-serif; font-size: clamp(74px,13vw,210px); font-weight: 800; line-height: .75; letter-spacing: -10px; }
+.opening-mark span { display: block; animation: openingWord 1.15s cubic-bezier(.2,.74,.2,1) both; }
+.opening-mark span:last-child { color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,.88); animation-delay: .13s; }
+.ry-opening > p { position: absolute; top: 59%; left: 50%; margin: 0; font-family: "Cormorant Garamond",Georgia,serif; font-size: clamp(21px,2vw,34px); line-height: 1.08; text-align: center; transform: translateX(-50%); animation: openingCopy .8s .65s ease both; }
+.ry-opening > p b { color: #eeb0bc; font-weight: 400; }
+.opening-progress { position: absolute; bottom: 75px; left: 50%; width: min(420px,60vw); height: 1px; overflow: hidden; background: rgba(255,255,255,.18); transform: translateX(-50%); }
+.opening-progress i { display: block; width: 100%; height: 100%; background: var(--wine); transform: scaleX(0); transform-origin: left; animation: openingProgress 3.15s .1s cubic-bezier(.2,.7,.2,1) both; }
+.ry-opening > small { position: absolute; bottom: 47px; left: 50%; color: rgba(255,255,255,.4); font-size: 6px; letter-spacing: 2.2px; transform: translateX(-50%); }
+.ry-opening > button { position: absolute; right: 43px; bottom: 39px; display: flex; align-items: center; gap: 17px; padding: 10px 0; border: 0; border-bottom: 1px solid rgba(255,255,255,.38); background: transparent; color: rgba(255,255,255,.65); font-size: 8px; letter-spacing: 1px; }
+.ry-opening > button span { font-size: 16px; }
+
+.ry-cursor { position: fixed; z-index: 9998; top: 0; left: 0; width: 1px; height: 1px; opacity: 0; pointer-events: none; transition: opacity .25s ease; }
+.ry-cursor.is-visible { opacity: 1; }
+.ry-cursor i,.ry-cursor span { position: absolute; top: 0; left: 0; border-radius: 50%; transform: translate(-50%,-50%); }
+.ry-cursor i { width: 7px; height: 7px; background: var(--wine); }
+.ry-cursor span { width: 35px; height: 35px; border: 1px solid rgba(178,13,43,.65); transition: width .25s ease,height .25s ease,background .25s ease,transform .15s ease; }
+.ry-cursor.is-active span { width: 55px; height: 55px; background: rgba(178,13,43,.1); }
+.ry-cursor.is-down span { transform: translate(-50%,-50%) scale(.72); }
+.ry-page-progress { position: fixed; z-index: 80; top: 0; right: 0; width: 3px; height: 100vh; background: rgba(255,255,255,.12); pointer-events: none; }
+.ry-page-progress i { display: block; width: 100%; height: var(--page-progress,0%); background: var(--wine); box-shadow: 0 0 12px rgba(178,13,43,.55); }
+
+.market-v9 .hero-photo::after { content: ""; position: absolute; z-index: 3; inset: 0; background: radial-gradient(circle at calc(50% + var(--pointer-x)) calc(42% + var(--pointer-y)),rgba(255,244,225,.12),transparent 34%); pointer-events: none; mix-blend-mode: screen; }
+.hero-scroll-cue { position: absolute; z-index: 9; bottom: 126px; left: clamp(34px,5.8vw,94px); display: flex; align-items: center; gap: 14px; color: rgba(255,255,255,.4); font-size: 6px; letter-spacing: 1.6px; writing-mode: vertical-rl; transform: rotate(180deg); }
+.hero-scroll-cue i { width: 1px; height: 56px; overflow: hidden; background: rgba(255,255,255,.18); }
+.hero-scroll-cue i::after { content: ""; display: block; width: 1px; height: 26px; background: var(--wine); animation: scrollSignal 1.8s ease-in-out infinite; }
+.hero-cinema-bars { position: absolute; z-index: 8; inset: 0; pointer-events: none; }
+.hero-cinema-bars span { position: absolute; right: 47%; left: 0; height: 10px; background: #080706; animation: cinemaBars 1.4s .25s cubic-bezier(.2,.7,.2,1) both; }
+.hero-cinema-bars span:first-child { top: 92px; }
+.hero-cinema-bars span:last-child { bottom: 0; }
+
+.market-v9 .mira-modal-backdrop { padding: 4vh 4vw; background: rgba(8,7,6,.9); animation: immersiveBackdrop .42s ease both; }
+.market-v9 .mira-modal { grid-template-columns: 1.35fr .65fr; width: min(1420px,100%); max-height: 92vh; overflow: hidden; background: var(--ivory); animation: immersiveModal .72s cubic-bezier(.18,.76,.2,1) both; }
+.market-v9 .modal-image { min-height: 84vh; overflow: hidden; }
+.market-v9 .modal-image::after { content: "REALYERİN / SEÇKİ"; position: absolute; right: 25px; bottom: 22px; color: rgba(255,255,255,.62); font-size: 7px; letter-spacing: 1.8px; }
+.market-v9 .modal-image img { animation: modalCamera 8s cubic-bezier(.2,.7,.2,1) both; }
+.market-v9 .modal-content { display: flex; flex-direction: column; justify-content: center; padding: clamp(34px,4.5vw,72px); }
+.market-v9 .modal-content h2 { font-size: clamp(44px,4.4vw,72px); line-height: .88; letter-spacing: -2.5px; }
+.market-v9 .modal-content > p { font-size: 10px; line-height: 1.85; }
+.market-v9 .modal-content footer { margin-top: 34px; }
+.market-v9 .modal-close { top: 17px; right: 17px; z-index: 7; width: 45px; height: 45px; border-color: var(--ink); background: var(--ivory); color: var(--ink); }
+
+@keyframes openingCamera { from { opacity: 0; transform: scale(1.16); } to { opacity: 1; transform: scale(1.02); } }
+@keyframes openingWord { from { opacity: 0; transform: translateY(70px); filter: blur(13px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
+@keyframes openingCopy { from { opacity: 0; transform: translate(-50%,22px); } to { opacity: 1; transform: translate(-50%,0); } }
+@keyframes openingProgress { to { transform: scaleX(1); } }
+@keyframes scrollSignal { 0% { transform: translateY(-28px); } 100% { transform: translateY(60px); } }
+@keyframes cinemaBars { from { transform: scaleY(5); } to { transform: scaleY(1); } }
+@keyframes immersiveBackdrop { from { opacity: 0; } to { opacity: 1; } }
+@keyframes immersiveModal { from { opacity: 0; transform: scale(.94) translateY(35px); clip-path: inset(7%); } to { opacity: 1; transform: scale(1) translateY(0); clip-path: inset(0); } }
+@keyframes modalCamera { from { transform: scale(1.08); filter: saturate(.55) brightness(.75); } to { transform: scale(1); filter: saturate(.82) brightness(.9); } }
+
+@media (max-width: 820px) {
+  .ry-opening::after { inset: 12px; }
+  .opening-mark { margin-top: -80px; font-size: 21vw; letter-spacing: -6px; }
+  .ry-opening > p { top: 56%; width: 80%; }
+  .opening-progress { bottom: 83px; width: 70vw; }
+  .ry-opening > button { right: 22px; bottom: 25px; }
+  .ry-opening > small { bottom: 39px; left: 22px; transform: none; }
+  .ry-cursor { display: none; }
+  .hero-scroll-cue { display: none; }
+  .hero-cinema-bars span { right: 0; }
+  .hero-cinema-bars span:first-child { top: 76px; }
+  .market-v9 .mira-modal { grid-template-columns: 1fr; max-height: 94vh; overflow: auto; }
+  .market-v9 .modal-image { min-height: 48vh; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ry-opening { display: none; }
+  .ry-page-progress { display: none; }
+  .market-v9 .mira-modal,.market-v9 .mira-modal-backdrop,.market-v9 .modal-image img { animation: none !important; }
+}
