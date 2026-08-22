@@ -28,6 +28,8 @@ test("RealYerin ana sayfasını sunucu tarafında oluşturur", async () => {
   assert.match(html, /outline-text">BUL\./);
   assert.match(html, /hero-auto-progress/);
   assert.match(html, /HIZLI KEŞİF/);
+  assert.match(html, /REALYERİN RADAR/);
+  assert.match(html, /Hayatı tarif et/);
   assert.match(html, /NEDEN REALYERİN/);
   assert.match(html, /CANLI BÖLGE HARİTASI/);
   assert.match(html, /Boğaz manzaralı, teraslı daire/);
@@ -45,6 +47,7 @@ test("temel erişilebilirlik ve iletişim öğelerini içerir", async () => {
 
   assert.match(html, /aria-label="Ana menü"/);
   assert.match(html, /aria-label="İlan türü"/);
+  assert.match(html, /aria-label="Mobil hızlı menü"/);
   assert.match(html, /mira-tr\.vtt/);
   assert.match(html, /İşaret dili/);
   assert.match(html, /type="tel"/);
