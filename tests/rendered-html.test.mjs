@@ -22,9 +22,10 @@ test("RealYerin ana sayfasını sunucu tarafında oluşturur", async () => {
   assert.match(html, /<html[^>]*lang="tr"/i);
   assert.match(html, /<title>RealYerin \| Türkiye(?:&#x27;|&#39;|')nin Emlak Platformu<\/title>/i);
   assert.match(html, /REALYERİN/);
-  assert.match(html, /HAFTANIN ÖNERİLEN İLANI/);
+  assert.match(html, /REALYERİN SEÇKİSİ/);
   assert.match(html, /HIZLI KEŞİF/);
   assert.match(html, /NEDEN REALYERİN/);
+  assert.match(html, /CANLI BÖLGE HARİTASI/);
   assert.match(html, /Boğaz manzaralı, teraslı daire/);
   assert.match(html, /İlk yıl herkes için/);
   assert.match(html, /mira-cinematic\.mp4/);
