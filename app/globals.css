@@ -1938,3 +1938,106 @@ body.ry-opening-lock { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   .ry-soon-photo img,.ry-soon-header > p i,.ry-soon-ticker > div { animation: none; }
 }
+
+/* Guvenle Al Sat — responsive launch poster */
+.launch-poster {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  min-height: 100svh;
+  overflow: hidden;
+  background: #070104;
+  color: #fff;
+  isolation: isolate;
+}
+.launch-poster-backdrop {
+  position: absolute;
+  z-index: -2;
+  inset: -42px;
+  width: calc(100% + 84px);
+  height: calc(100% + 84px);
+  object-fit: cover;
+  filter: blur(32px) brightness(.34) saturate(1.35);
+  opacity: .82;
+  transform: scale(1.08);
+}
+.launch-poster::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: radial-gradient(circle at 78% 36%,rgba(255,45,26,.18),transparent 35%),linear-gradient(180deg,rgba(4,0,3,.08),rgba(4,0,3,.42));
+  pointer-events: none;
+}
+.launch-poster-art {
+  width: min(100vw,calc(100svh * 1.7768));
+  max-height: 100svh;
+  margin: 0;
+  overflow: hidden;
+  box-shadow: 0 0 80px rgba(0,0,0,.52);
+  animation: launchReveal 1.15s cubic-bezier(.2,.72,.18,1) both;
+}
+.launch-poster-art img { display: block; width: 100%; height: auto; }
+.launch-poster-mobile { display: none; }
+.launch-free-year-desktop {
+  position: absolute;
+  z-index: 2;
+  right: max(24px,calc((100vw - min(100vw,100svh * 1.7768)) / 2 + 24px));
+  bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  min-width: 245px;
+  padding: 15px 19px;
+  border: 1px solid rgba(255,201,124,.62);
+  background: rgba(8,1,4,.82);
+  box-shadow: 0 12px 42px rgba(0,0,0,.38),inset 0 0 24px rgba(231,14,35,.08);
+  backdrop-filter: blur(12px);
+}
+.launch-free-year small { color: #e5bd7c; font-size: 9px; font-weight: 750; letter-spacing: .2em; }
+.launch-free-year strong { margin-top: 5px; color: #fff; font-size: 17px; letter-spacing: .055em; }
+.launch-free-year span { margin-top: 4px; color: rgba(255,255,255,.68); font-size: 11px; }
+.launch-free-year-mobile { display: none; }
+
+@keyframes launchReveal {
+  from { opacity: 0; transform: scale(1.025); filter: blur(5px); }
+  to { opacity: 1; transform: scale(1); filter: blur(0); }
+}
+
+@media (max-aspect-ratio: 4 / 5) {
+  .launch-poster-art { display: none; }
+  .launch-free-year-desktop { display: none; }
+  .launch-poster-backdrop { inset: -24px; width: calc(100% + 48px); height: calc(100% + 48px); object-position: center; filter: blur(13px) brightness(.34) saturate(1.4); opacity: .75; }
+  .launch-poster::after { background: linear-gradient(180deg,rgba(4,0,3,.38),rgba(10,0,4,.7)),radial-gradient(circle at 50% 20%,rgba(226,0,24,.35),transparent 48%); }
+  .launch-poster-mobile {
+    display: flex;
+    position: relative;
+    z-index: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: min(100% - 34px,560px);
+    min-height: 100svh;
+    padding: 44px 0 36px;
+    text-align: center;
+    animation: launchReveal 1s cubic-bezier(.2,.72,.18,1) both;
+  }
+  .launch-poster-mobile > span { display: flex; align-items: center; gap: 12px; color: rgba(255,255,255,.8); font-size: clamp(9px,2.7vw,12px); font-weight: 700; letter-spacing: .23em; }
+  .launch-poster-mobile > span i { width: 5px; height: 5px; border-radius: 50%; background: #f20a28; box-shadow: 0 0 16px #f20a28; }
+  .launch-brand-title { margin: clamp(54px,10vh,88px) 0 10px; font-size: clamp(48px,15.5vw,78px); line-height: .84; letter-spacing: -.075em; }
+  .launch-brand-title b,.launch-brand-title em { display: inline; font-style: normal; }
+  .launch-brand-title em { color: #f20a28; }
+  .launch-brand-title small { color: rgba(255,255,255,.72); font-size: .43em; font-weight: 300; letter-spacing: -.05em; }
+  .launch-poster-mobile > p { margin: 22px 0 28px; color: #fff0da; font-family: Georgia,"Times New Roman",serif; font-size: clamp(30px,10vw,52px); font-style: italic; line-height: 1; transform: rotate(-3deg); text-shadow: 0 0 26px rgba(242,10,40,.55); }
+  .launch-free-year-mobile { display: flex; flex-direction: column; width: 100%; margin-bottom: 28px; padding: 15px 12px; border: 1px solid rgba(255,201,124,.62); background: rgba(8,1,4,.62); box-shadow: inset 0 0 26px rgba(231,14,35,.11); }
+  .launch-free-year-mobile strong { font-size: clamp(18px,5.7vw,25px); }
+  .launch-poster-mobile > div { display: grid; width: 100%; border-top: 1px solid rgba(255,214,146,.35); border-bottom: 1px solid rgba(255,214,146,.35); }
+  .launch-poster-mobile > div strong { padding: 13px 8px; color: #f2ce91; font-size: 10px; letter-spacing: .13em; }
+  .launch-poster-mobile > div strong + strong { border-top: 1px solid rgba(255,214,146,.18); }
+  .launch-poster-mobile > a { width: 100%; margin-top: 42px; padding: 16px 14px; border: 1px solid rgba(255,43,58,.75); border-radius: 999px; background: rgba(4,0,3,.58); color: #fff; font-size: clamp(14px,4.4vw,20px); box-shadow: 0 0 28px rgba(242,10,40,.16); }
+  .launch-poster-mobile > small { margin-top: 25px; color: #f2ce91; font-family: Georgia,"Times New Roman",serif; font-size: 18px; font-style: italic; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .launch-poster-art,.launch-poster-mobile { animation: none; }
+}

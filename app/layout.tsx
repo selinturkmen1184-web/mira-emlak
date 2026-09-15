@@ -22,9 +22,9 @@ export async function generateMetadata(): Promise<Metadata> {
       ? forwardedProtocol
       : "https";
   const baseUrl = trustedHost ? `${protocol}://${host}` : "https://mira-emlak.pages.dev";
-  const socialImage = `${baseUrl}/og-v7.png`;
-  const title = "RealYerin | Çok Yakında";
-  const description = "Türkiye'nin yeni nesil emlak platformu RealYerin çok yakında burada.";
+  const socialImage = `${baseUrl}/guvenlealsat-yakinda.jpg`;
+  const title = "Güvenle Al Sat | Yakında Sizlerle";
+  const description = "Doğru adres, güvenli yatırım ve güvenli alım satım deneyimi çok yakında sizlerle.";
 
   return {
     title,
@@ -34,8 +34,8 @@ export async function generateMetadata(): Promise<Metadata> {
       description,
       type: "website",
       locale: "tr_TR",
-      siteName: "RealYerin",
-      images: [{ url: socialImage, width: 1731, height: 909, alt: "RealYerin — Yerini bul" }],
+      siteName: "Güvenle Al Sat",
+      images: [{ url: socialImage, width: 1672, height: 941, alt: "Güvenle Al Sat — Yakında Sizlerle" }],
     },
     twitter: {
       card: "summary_large_image",

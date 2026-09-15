@@ -299,25 +299,35 @@ function openFilmFullscreen() {
 
   if (COMING_SOON) {
     return (
-      <main className="ry-soon" aria-labelledby="soon-title">
-        <div className="ry-soon-photo" aria-hidden="true"><img src={listings[0].image} alt="" /><span /></div>
-        <header className="ry-soon-header">
-          <a className="ry-soon-brand" href="#soon-title" aria-label="RealYerin ana sayfa"><span>R<i>●</i></span><b>REALYERİN<small>YERİNİ BUL. YERİNDE BUL.</small></b></a>
-          <p><i /> HAZIRLANIYOR</p>
-        </header>
-        <section className="ry-soon-content">
-          <span className="ry-soon-index">YENİ NESİL EMLAK PLATFORMU / 2026</span>
-          <h1 id="soon-title"><span>ÇOK</span><span>YAKINDA</span><em>BURADAYIZ.</em></h1>
-          <p>Aradığın yeri bulmanın daha güvenli, daha ilham verici ve çok daha kolay bir yolu için son dokunuşları yapıyoruz.</p>
-        </section>
-        <aside className="ry-soon-card">
-          <small>REALYERİN / AÇILIŞA HAZIRLIK</small>
-          <strong><span>78</span>%</strong>
-          <div><i /><span /></div>
-          <p>Seçkin ilanlar, akıllı eşleştirme ve doğrulanmış emlak deneyimi çok yakında.</p>
+      <main className="launch-poster" aria-labelledby="soon-title">
+        <h1 id="soon-title" className="sr-only">Güvenle Al Sat — Yakında Sizlerle</h1>
+        <img className="launch-poster-backdrop" src={`${assetBase}/guvenlealsat-yakinda.jpg`} alt="" aria-hidden="true" />
+        <figure className="launch-poster-art">
+          <img
+            src={`${assetBase}/guvenlealsat-yakinda.jpg`}
+            alt="Güvenle Al Sat; doğru adres, güvenli yatırım, daima yanınızda. Yakında sizlerle."
+            width="1672"
+            height="941"
+            fetchPriority="high"
+          />
+        </figure>
+        <aside className="launch-free-year launch-free-year-desktop">
+          <small>AÇILIŞA ÖZEL</small>
+          <strong>İLK 1 YIL ÜCRETSİZ</strong>
+          <span>Üyelik avantajları ilk yıl ücretsiz.</span>
         </aside>
-        <footer className="ry-soon-footer"><span>41° 02′ N · 29° 00′ E</span><p>İSTANBUL · TÜRKİYE</p><span>© 2026 REALYERİN</span></footer>
-        <div className="ry-soon-ticker" aria-hidden="true"><div><span>YERİNİ BUL</span><i>×</i><span>GÜVENLE KEŞFET</span><i>×</i><span>ÇOK YAKINDA</span><i>×</i><span>YERİNİ BUL</span><i>×</i><span>GÜVENLE KEŞFET</span><i>×</i><span>ÇOK YAKINDA</span><i>×</i></div></div>
+        <section className="launch-poster-mobile">
+          <span>DOĞRU ADRES <i /> GÜVENLİ YATIRIM</span>
+          <h2 className="launch-brand-title"><b>güvenle</b><em>alsat</em><small>.com</small></h2>
+          <p>Yakında Sizlerle...</p>
+          <aside className="launch-free-year launch-free-year-mobile">
+            <small>AÇILIŞA ÖZEL</small>
+            <strong>İLK 1 YIL ÜCRETSİZ</strong>
+          </aside>
+          <div><strong>HIZLI SATIŞ</strong><strong>GÜVENLİ ALIM - SATIM</strong><strong>DOĞRU FİYAT</strong></div>
+          <a href="mailto:guvenlealsat@gmail.com" aria-label="Güvenle Al Sat e-posta adresine yaz">guvenlealsat@gmail.com</a>
+          <small>Güvenle Alın, Güvenle Satın...</small>
+        </section>
       </main>
     );
   }

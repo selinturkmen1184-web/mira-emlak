@@ -13,22 +13,24 @@ async function render() {
   );
 }
 
-test("RealYerin yakında ekranını sunucu tarafında oluşturur", async () => {
+test("Güvenle Al Sat yakında ekranını sunucu tarafında oluşturur", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
   assert.match(html, /<html[^>]*lang="tr"/i);
-  assert.match(html, /<title>RealYerin \| Çok Yakında<\/title>/i);
-  assert.match(html, /REALYERİN/);
-  assert.match(html, /ÇOK/);
-  assert.match(html, /YAKINDA/);
-  assert.match(html, /BURADAYIZ\./);
-  assert.match(html, /AÇILIŞA HAZIRLIK/);
-  assert.match(html, /GÜVENLE KEŞFET/);
+  assert.match(html, /<title>Güvenle Al Sat \| Yakında Sizlerle<\/title>/i);
+  assert.match(html, /güvenle/i);
+  assert.match(html, /alsat/i);
+  assert.match(html, /Yakında Sizlerle/);
+  assert.match(html, /HIZLI SATIŞ/);
+  assert.match(html, /GÜVENLİ ALIM - SATIM/);
+  assert.match(html, /DOĞRU FİYAT/);
+  assert.match(html, /İLK 1 YIL ÜCRETSİZ/);
   assert.match(html, /aria-labelledby="soon-title"/);
-  assert.match(html, /https:\/\/mira-emlak\.pages\.dev\/og-v7\.png/);
+  assert.match(html, /https:\/\/mira-emlak\.pages\.dev\/guvenlealsat-yakinda\.jpg/);
+  assert.doesNotMatch(html, /RealYerin|REALYERİN|YERİNİ BUL/);
   assert.doesNotMatch(html, /codex-preview|SkeletonPreview|Your site is taking shape/i);
 });
 
@@ -37,7 +39,8 @@ test("yakında ekranının temel erişilebilirlik öğelerini içerir", async ()
   const html = await response.text();
 
   assert.match(html, /<h1[^>]*id="soon-title"/);
-  assert.match(html, /aria-label="RealYerin ana sayfa"/);
+  assert.match(html, /aria-label="Güvenle Al Sat e-posta adresine yaz"/);
   assert.match(html, /<img[^>]*alt=""/);
-  assert.doesNotMatch(html, /type="password"|guvenlealsat@gmail\.com/i);
+  assert.match(html, /guvenlealsat@gmail\.com/i);
+  assert.doesNotMatch(html, /type="password"/i);
 });
