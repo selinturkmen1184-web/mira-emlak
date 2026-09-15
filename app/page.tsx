@@ -19,6 +19,8 @@ type Listing = {
   description: string;
 };
 
+const COMING_SOON = true;
+
 const listings: Listing[] = [
   { id: 1, title: "Boğaz manzaralı, teraslı daire", city: "İstanbul", district: "Beşiktaş", price: "18.750.000 TL", intent: "Satılık", kind: "Konut", rooms: "3+1", area: "165 m²", floor: "7. kat", image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=90", featured: true, description: "Boğaz hattına hâkim terası, aydınlık salonu ve yenilenmiş iç mimarisiyle taşınmaya hazır seçkin bir yaşam alanı." },
   { id: 2, title: "Marinaya yakın müstakil villa", city: "İzmir", district: "Urla", price: "24.900.000 TL", intent: "Satılık", kind: "Villa", rooms: "4+1", area: "280 m²", floor: "2 kat", image: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1800&q=90", featured: true, description: "Özel bahçesi, ferah yaşam alanları ve marinaya yakın konumuyla dört mevsim huzurlu bir yaşam sunan müstakil villa." },
@@ -170,6 +172,11 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    if (COMING_SOON) {
+      setIntroVisible(false);
+      document.body.classList.remove("ry-opening-lock");
+      return;
+    }
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || window.sessionStorage.getItem("realyerin-opening-seen")) {
       setIntroVisible(false);
       return;
@@ -288,6 +295,31 @@ function openFilmFullscreen() {
 
   function toggleCompare(id: number) {
     setCompareIds((items) => items.includes(id) ? items.filter((item) => item !== id) : items.length < 3 ? [...items, id] : [...items.slice(1), id]);
+  }
+
+  if (COMING_SOON) {
+    return (
+      <main className="ry-soon" aria-labelledby="soon-title">
+        <div className="ry-soon-photo" aria-hidden="true"><img src={listings[0].image} alt="" /><span /></div>
+        <header className="ry-soon-header">
+          <a className="ry-soon-brand" href="#soon-title" aria-label="RealYerin ana sayfa"><span>R<i>●</i></span><b>REALYERİN<small>YERİNİ BUL. YERİNDE BUL.</small></b></a>
+          <p><i /> HAZIRLANIYOR</p>
+        </header>
+        <section className="ry-soon-content">
+          <span className="ry-soon-index">YENİ NESİL EMLAK PLATFORMU / 2026</span>
+          <h1 id="soon-title"><span>ÇOK</span><span>YAKINDA</span><em>BURADAYIZ.</em></h1>
+          <p>Aradığın yeri bulmanın daha güvenli, daha ilham verici ve çok daha kolay bir yolu için son dokunuşları yapıyoruz.</p>
+        </section>
+        <aside className="ry-soon-card">
+          <small>REALYERİN / AÇILIŞA HAZIRLIK</small>
+          <strong><span>78</span>%</strong>
+          <div><i /><span /></div>
+          <p>Seçkin ilanlar, akıllı eşleştirme ve doğrulanmış emlak deneyimi çok yakında.</p>
+        </aside>
+        <footer className="ry-soon-footer"><span>41° 02′ N · 29° 00′ E</span><p>İSTANBUL · TÜRKİYE</p><span>© 2026 REALYERİN</span></footer>
+        <div className="ry-soon-ticker" aria-hidden="true"><div><span>YERİNİ BUL</span><i>×</i><span>GÜVENLE KEŞFET</span><i>×</i><span>ÇOK YAKINDA</span><i>×</i><span>YERİNİ BUL</span><i>×</i><span>GÜVENLE KEŞFET</span><i>×</i><span>ÇOK YAKINDA</span><i>×</i></div></div>
+      </main>
+    );
   }
 
   return (

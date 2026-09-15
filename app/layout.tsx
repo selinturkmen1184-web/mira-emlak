@@ -23,8 +23,8 @@ export async function generateMetadata(): Promise<Metadata> {
       : "https";
   const baseUrl = trustedHost ? `${protocol}://${host}` : "https://mira-emlak.pages.dev";
   const socialImage = `${baseUrl}/og-v7.png`;
-  const title = "RealYerin | Türkiye'nin Emlak Platformu";
-  const description = "Satılık ve kiralık konut, villa, arsa ve iş yeri ilanlarını güvenle keşfet. RealYerin'de üyelik ve ilan vermek ilk 12 ay ücretsiz.";
+  const title = "RealYerin | Çok Yakında";
+  const description = "Türkiye'nin yeni nesil emlak platformu RealYerin çok yakında burada.";
 
   return {
     title,

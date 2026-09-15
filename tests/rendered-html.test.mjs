@@ -13,47 +13,31 @@ async function render() {
   );
 }
 
-test("RealYerin ana sayfasını sunucu tarafında oluşturur", async () => {
+test("RealYerin yakında ekranını sunucu tarafında oluşturur", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
   assert.match(html, /<html[^>]*lang="tr"/i);
-  assert.match(html, /<title>RealYerin \| Türkiye(?:&#x27;|&#39;|')nin Emlak Platformu<\/title>/i);
+  assert.match(html, /<title>RealYerin \| Çok Yakında<\/title>/i);
   assert.match(html, /REALYERİN/);
-  assert.match(html, /Yeni bir hayatın ilk karesi/);
-  assert.match(html, /ry-page-progress/);
-  assert.match(html, /YENİ EMLAK SİSTEMİ/);
-  assert.match(html, /outline-text">BUL\./);
-  assert.match(html, /hero-auto-progress/);
-  assert.match(html, /HIZLI KEŞİF/);
-  assert.match(html, /YAŞAM SENARYOLARI/);
-  assert.match(html, /Bir sahne seç/);
-  assert.match(html, /REALYERİN EŞLEŞMESİ/);
-  assert.match(html, /BÜTÇE STÜDYOSU/);
-  assert.match(html, /FIRSAT ALARMI/);
-  assert.match(html, /Karşılaştır \+/);
-  assert.match(html, /NEDEN REALYERİN/);
-  assert.match(html, /CANLI BÖLGE HARİTASI/);
-  assert.match(html, /Boğaz manzaralı, teraslı daire/);
-  assert.match(html, /İlk yıl herkes için/);
-  assert.match(html, /mira-cinematic\.mp4/);
-  assert.match(html, /FİLMİ OYNAT/);
-  assert.match(html, /aria-label="Tam ekran izle"/);
+  assert.match(html, /ÇOK/);
+  assert.match(html, /YAKINDA/);
+  assert.match(html, /BURADAYIZ\./);
+  assert.match(html, /AÇILIŞA HAZIRLIK/);
+  assert.match(html, /GÜVENLE KEŞFET/);
+  assert.match(html, /aria-labelledby="soon-title"/);
   assert.match(html, /https:\/\/mira-emlak\.pages\.dev\/og-v7\.png/);
   assert.doesNotMatch(html, /codex-preview|SkeletonPreview|Your site is taking shape/i);
 });
 
-test("temel erişilebilirlik ve iletişim öğelerini içerir", async () => {
+test("yakında ekranının temel erişilebilirlik öğelerini içerir", async () => {
   const response = await render();
   const html = await response.text();
 
-  assert.match(html, /aria-label="Ana menü"/);
-  assert.match(html, /aria-label="İlan türü"/);
-  assert.match(html, /aria-label="Mobil hızlı menü"/);
-  assert.match(html, /mira-tr\.vtt/);
-  assert.match(html, /İşaret dili/);
-  assert.match(html, /type="tel"/);
-  assert.match(html, /mailto:merhaba@realyerin\.com/);
+  assert.match(html, /<h1[^>]*id="soon-title"/);
+  assert.match(html, /aria-label="RealYerin ana sayfa"/);
+  assert.match(html, /<img[^>]*alt=""/);
+  assert.doesNotMatch(html, /type="password"|guvenlealsat@gmail\.com/i);
 });
